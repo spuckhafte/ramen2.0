@@ -17,7 +17,14 @@ const nPrefix = 'n';
 
 bot.bot.on('messageCreate', async msg => {
     if (msg.author.bot) return;
-    if (Bio.ADMIN.TESTING) if (msg.guild?.id != Bio.ADMIN.DEV_SERVER) return;
+    if (!msg.guild) return;
+
+    if (Bio.ADMIN.TESTING) {
+        if (
+            !Bio.ADMIN.DEV_SERVERS.includes(msg.guild.id) &&
+            !Bio.ADMIN.DEV_CHANNELS.includes(msg.channel.id)
+        ) return;
+    }
 
     if (msg.content.toLowerCase().replace(/[ ]+/g, ' ').split(' ')[0].trim() == nPrefix) {
         await nHandler(msg);
