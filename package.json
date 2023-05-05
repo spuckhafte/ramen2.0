@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "breezer.js": "^0.3.6",
+    "discord.js": "^13.11.0",
+    "mongoose": "^6.6.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && node ./dist/",
+    "start": "node ./dist/"
+  }
+}

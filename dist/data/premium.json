@@ -1,0 +1,7 @@
+{
+    "servers": [],
+    "servers_example": [
+        ["828390382616287", "secretserver", "server1", "16996898", "2"],
+        ["id", "name", "dbName", "premium expire timeStamp", "premium tier"]
+    ]
+}
