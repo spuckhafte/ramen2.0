@@ -35,6 +35,7 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     if (!channel.guild.members.me?.permissionsIn(channel).has('SEND_MESSAGES')) return;
 
     const timeout = setTimeout(async () => {
+        delete timeouts[`${id}-${task}`]
         await channel?.send(`<@${id}> your **${task}** is ready!`);
     }, ((remIntervals[task] * 1000) - tickedTime) - 200);
     

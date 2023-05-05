@@ -15,6 +15,7 @@ const timeouts = {};
 export function manageReminders(task, id, actualTS, channel) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(timeouts);
         if (timeouts[`${id}-${task}`] != undefined)
             return;
         if (task == 'null')
@@ -44,8 +45,9 @@ export function manageReminders(task, id, actualTS, channel) {
         if (!((_c = channel.guild.members.me) === null || _c === void 0 ? void 0 : _c.permissionsIn(channel).has('SEND_MESSAGES')))
             return;
         const timeout = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+            delete timeouts[`${id}-${task}`];
             yield (channel === null || channel === void 0 ? void 0 : channel.send(`<@${id}> your **${task}** is ready!`));
-        }), ((remIntervals[task] * 1000) - tickedTime) - 50);
+        }), ((remIntervals[task] * 1000) - tickedTime) - 200);
         timeouts[`${id}-${task}`] = timeout;
         return 'added';
     });
