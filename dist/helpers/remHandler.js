@@ -15,7 +15,6 @@ const timeouts = {};
 export function manageReminders(task, id, actualTS, channel) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(timeouts);
         if (timeouts[`${id}-${task}`] != undefined)
             return;
         if (task == 'null')

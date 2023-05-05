@@ -21,12 +21,15 @@ const bot = new Bot({
 });
 const nPrefix = 'n';
 bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     if (msg.author.bot)
         return;
-    if (Bio.ADMIN.TESTING)
-        if (((_a = msg.guild) === null || _a === void 0 ? void 0 : _a.id) != Bio.ADMIN.DEV_SERVER)
+    if (!msg.guild)
+        return;
+    if (Bio.ADMIN.TESTING) {
+        if (!Bio.ADMIN.DEV_SERVERS.includes(msg.guild.id) &&
+            !Bio.ADMIN.DEV_CHANNELS.includes(msg.channel.id))
             return;
+    }
     if (msg.content.toLowerCase().replace(/[ ]+/g, ' ').split(' ')[0].trim() == nPrefix) {
         yield nHandler(msg);
     }
