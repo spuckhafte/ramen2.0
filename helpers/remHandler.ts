@@ -6,6 +6,7 @@ import { client } from "../index.js";
 import Bio from '../data/bio.json' assert { type: "json" };
 
 const timeouts:TimeoutStore = {} // { "4539454395349-mission": 2342, "userid-task": timeoutId }
+const delay = 1500;
 
 export async function manageReminders(task:Tasks, id:string, actualTS:'now'|number, channel:TextChannel|null) {
     if (timeouts[`${id}-${task}`] != undefined) return;
@@ -37,7 +38,7 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     const timeout = setTimeout(async () => {
         delete timeouts[`${id}-${task}`]
         await channel?.send(`<@${id}> your **${task}** is ready!`);
-    }, ((remIntervals[task] * 1000) - tickedTime) - 200);
+    }, ((remIntervals[task] * 1000) - tickedTime) - delay);
     
     timeouts[`${id}-${task}`] = timeout;
     return 'added'

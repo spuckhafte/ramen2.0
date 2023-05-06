@@ -12,6 +12,7 @@ import { register, remIntervals, updateDb } from "./funcs.js";
 import { client } from "../index.js";
 import Bio from '../data/bio.json' assert { type: "json" };
 const timeouts = {};
+const delay = 1500;
 export function manageReminders(task, id, actualTS, channel) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
@@ -46,7 +47,7 @@ export function manageReminders(task, id, actualTS, channel) {
         const timeout = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
             delete timeouts[`${id}-${task}`];
             yield (channel === null || channel === void 0 ? void 0 : channel.send(`<@${id}> your **${task}** is ready!`));
-        }), ((remIntervals[task] * 1000) - tickedTime) - 200);
+        }), ((remIntervals[task] * 1000) - tickedTime) - delay);
         timeouts[`${id}-${task}`] = timeout;
         return 'added';
     });
