@@ -49,7 +49,13 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
             const desc = nbMsg.embeds[0].description;
             let timeString = desc.split('- `')[1].trim().split('` rema')[0].trim();
             const ticked = timeTicked('quest', timeToMs(timeString));
-            yield manageReminders('quest', msg.author.id, Date.now() - ticked, msg.channel);
+            const confirm = yield manageReminders('quest', msg.author.id, Date.now() - ticked, msg.channel);
+            if (confirm == 'added') {
+                yield msg.channel.send({
+                    content: `${msg.author} reminder added for **quest**`,
+                    allowedMentions: { repliedUser: false }
+                });
+            }
         }));
     }
     if (task == 'challenge') {
