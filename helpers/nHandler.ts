@@ -68,10 +68,17 @@ export default async (msg: Message) => {
             let timeString = desc.split('- `')[1].trim().split('` rema')[0].trim();
             const ticked = timeTicked('quest', timeToMs(timeString));
             
-            await manageReminders(
+            const confirm = await manageReminders(
                 'quest', msg.author.id, Date.now() - (ticked as number), 
                 msg.channel as TextChannel
             );
+
+            if (confirm == 'added') {
+                await msg.channel.send({
+                    content: `${msg.author} reminder added for **quest**`,
+                    allowedMentions: { repliedUser: false }
+                });
+            }
         });
     }
 
