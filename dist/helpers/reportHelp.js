@@ -16,5 +16,5 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const num = nums.find(i => report.includes(i));
     const color = colors.find(i => report.includes(i));
     const location = locations.find(i => report.includes(i));
-    yield msg.channel.send(`**Hint: __\`${num} ${color} ${location}\`__**`);
+    yield msg.reply(`**Hint: __\`${num} ${color} ${location}\`__**`);
 });

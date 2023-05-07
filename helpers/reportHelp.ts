@@ -11,5 +11,5 @@ export default async (msg:Message) => {
     const color = colors.find(i => report.includes(i));
     const location = locations.find(i => report.includes(i));
 
-    await msg.channel.send(`**Hint: __\`${num} ${color} ${location}\`__**`);
+    await msg.reply(`**Hint: __\`${num} ${color} ${location}\`__**`);
 }
