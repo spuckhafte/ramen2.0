@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Bot } from 'breezer.js';
 import Bio from './data/bio.json' assert { type: "json" };
-import nHandler from './helpers/nHandler.js';
+import nHandler, { reRegisterReminders } from './helpers/nHandler.js';
 import mongoose from 'mongoose';
 import reportHelp from './helpers/reportHelp.js';
 mongoose.set('strictQuery', false);
@@ -43,6 +43,7 @@ bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function*
 bot.go(() => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
     console.log(`Logged in as ${(_b = bot.bot.user) === null || _b === void 0 ? void 0 : _b.username}`);
+    yield reRegisterReminders();
     console.log('Reminders Re-registered!');
 }));
 export const client = bot.bot;

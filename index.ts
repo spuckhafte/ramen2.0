@@ -38,7 +38,7 @@ bot.bot.on('messageCreate', async msg => {
 
 bot.go(async () => {
     console.log(`Logged in as ${bot.bot.user?.username}`);
-    // await reRegisterReminders(); testing
+    await reRegisterReminders();
     console.log('Reminders Re-registered!');
 });
 export const client = bot.bot;
