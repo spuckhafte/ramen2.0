@@ -86,11 +86,11 @@ export default async (msg: Message) => {
         let collector = collectSignal(
             msg, 'msg.content',
             m => !!m.content.includes(`**${msg.author.username}** challenged you to a fight`)
-        ).on('collect', async msg => {
+        ).on('collect', async () => {
             let target = msg.mentions.users.first()?.id;
             collectSignal(
                 msg, 'msg.content',
-                m => !!(m.content.trim().toLowerCase() == 'y'),
+                m => !!(m.content.trim().toLowerCase() == 'y' || m.content.trim().toLowerCase() == 'yes'),
                 31, 1, target
             ).on('collect', async () => {
                 await manageReminders('challenge', msg.author.id, 'now', msg.channel as TextChannel);

@@ -59,10 +59,10 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
         }));
     }
     if (task == 'challenge') {
-        let collector = collectSignal(msg, 'msg.content', m => !!m.content.includes(`**${msg.author.username}** challenged you to a fight`)).on('collect', (msg) => __awaiter(void 0, void 0, void 0, function* () {
+        let collector = collectSignal(msg, 'msg.content', m => !!m.content.includes(`**${msg.author.username}** challenged you to a fight`)).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
             var _a;
             let target = (_a = msg.mentions.users.first()) === null || _a === void 0 ? void 0 : _a.id;
-            collectSignal(msg, 'msg.content', m => !!(m.content.trim().toLowerCase() == 'y'), 31, 1, target).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
+            collectSignal(msg, 'msg.content', m => !!(m.content.trim().toLowerCase() == 'y' || m.content.trim().toLowerCase() == 'yes'), 31, 1, target).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
                 yield manageReminders('challenge', msg.author.id, 'now', msg.channel);
                 collector.dispose(msg);
             }));
