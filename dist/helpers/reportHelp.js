@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const nums = ['1', '2', '3', '4', '5'];
-    const colors = ['white', 'black'];
+    const colors = ['white', 'black', 'grey'];
     const locations = ['forest', 'dango', 'gate'];
     const report = (_a = msg.embeds[0].description) === null || _a === void 0 ? void 0 : _a.toLowerCase();
     const num = nums.find(i => report.includes(i));

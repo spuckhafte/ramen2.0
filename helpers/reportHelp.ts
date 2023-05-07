@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 
 export default async (msg:Message) => {
     const nums = ['1', '2', '3', '4', '5']
-    const colors = ['white', 'black'];
+    const colors = ['white', 'black', 'grey'];
     const locations = ['forest', 'dango', 'gate'];
 
     const report = msg.embeds[0].description?.toLowerCase() as string;
