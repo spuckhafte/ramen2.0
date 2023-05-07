@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Bot } from 'breezer.js';
 import Bio from './data/bio.json' assert { type: "json" };
-import nHandler, { reRegisterReminders } from './helpers/nHandler.js';
+import nHandler from './helpers/nHandler.js';
 import mongoose from 'mongoose';
+import reportHelp from './helpers/reportHelp.js';
 mongoose.set('strictQuery', false);
 mongoose.connect(Bio.DB, (e) => console.log(e ? "Error: " + e : "[connected to DB]"));
 const bot = new Bot({
@@ -21,8 +22,7 @@ const bot = new Bot({
 });
 const nPrefix = 'n';
 bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    if (msg.author.bot)
-        return;
+    var _a;
     if (!msg.guild)
         return;
     if (Bio.ADMIN.TESTING) {
@@ -31,13 +31,18 @@ bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function*
             return;
     }
     if (msg.content.toLowerCase().replace(/[ ]+/g, ' ').split(' ')[0].trim() == nPrefix) {
+        if (msg.author.bot)
+            return;
         yield nHandler(msg);
+    }
+    if (msg.author.id == Bio.NB) {
+        if ((_a = msg.embeds[0].title) === null || _a === void 0 ? void 0 : _a.includes('report'))
+            yield reportHelp(msg);
     }
 }));
 bot.go(() => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    console.log(`Logged in as ${(_a = bot.bot.user) === null || _a === void 0 ? void 0 : _a.username}`);
-    yield reRegisterReminders();
+    var _b;
+    console.log(`Logged in as ${(_b = bot.bot.user) === null || _b === void 0 ? void 0 : _b.username}`);
     console.log('Reminders Re-registered!');
 }));
 export const client = bot.bot;
