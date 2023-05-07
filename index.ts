@@ -32,7 +32,7 @@ bot.bot.on('messageCreate', async msg => {
     }
 
     if (msg.author.id == Bio.NB) {
-        if (msg.embeds[0].title?.includes('report')) await reportHelp(msg);
+        if (msg.embeds[0]?.title?.includes('report')) await reportHelp(msg);
     }
 });
 

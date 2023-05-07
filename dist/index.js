@@ -22,7 +22,7 @@ const bot = new Bot({
 });
 const nPrefix = 'n';
 bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     if (!msg.guild)
         return;
     if (Bio.ADMIN.TESTING) {
@@ -36,13 +36,13 @@ bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function*
         yield nHandler(msg);
     }
     if (msg.author.id == Bio.NB) {
-        if ((_a = msg.embeds[0].title) === null || _a === void 0 ? void 0 : _a.includes('report'))
+        if ((_b = (_a = msg.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.includes('report'))
             yield reportHelp(msg);
     }
 }));
 bot.go(() => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    console.log(`Logged in as ${(_b = bot.bot.user) === null || _b === void 0 ? void 0 : _b.username}`);
+    var _c;
+    console.log(`Logged in as ${(_c = bot.bot.user) === null || _c === void 0 ? void 0 : _c.username}`);
     yield reRegisterReminders();
     console.log('Reminders Re-registered!');
 }));
