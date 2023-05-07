@@ -35,6 +35,8 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     if (!channel) return;
     if (!channel.guild.members.me?.permissionsIn(channel).has('SEND_MESSAGES')) return;
 
+    await updateDb({ id }, `lastPlayed.${task}`, channel.id);
+
     const timeout = setTimeout(async () => {
         delete timeouts[`${id}-${task}`]
         await channel?.send(`<@${id}> your **${task}** is ready!`);

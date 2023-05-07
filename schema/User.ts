@@ -64,6 +64,19 @@ const userSchema = new mongoose.Schema({
     getPings: {
         type: [String],
         default: ['mission', 'report', 'tower', 'train', 'adventure', 'daily', 'vote', 'weekly', 'challenge', 'quest',]
+    },
+
+    lastPlayed: {
+        mission: String,
+        report: String,
+        tower: String,
+        train: String,
+        adventure: String,
+        daily: String,
+        vote: String,
+        weekly: String,
+        challenge: String,
+        quest: String
     }
 });
 

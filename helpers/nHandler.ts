@@ -155,12 +155,15 @@ export async function reRegisterReminders() {
     for (let user of await User.find({})) {
         if (!user.reminder) continue;
 
-        const defaultChannel = user.extras?.defaultChannel ?? Bio.DEFAULT_CHANNEL;
-        const channel = await client.channels.fetch(defaultChannel);
-        if (!channel) continue;
-
         for (let taskNdTS of Object.entries(user.reminder)) {
             const task = taskNdTS[0] as Tasks;
+            if (task == 'null') continue;
+
+            const defaultChannel = user.extras?.defaultChannel 
+                ?? (user.lastPlayed?.[task] ?? Bio.DEFAULT_CHANNEL);
+            const channel = await client.channels.fetch(defaultChannel);
+            if (!channel) continue;
+
             const timestamp = taskNdTS[1];
             await manageReminders(task, user.id, timestamp, channel as TextChannel)
         }

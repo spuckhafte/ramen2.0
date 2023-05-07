@@ -110,17 +110,19 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 export function reRegisterReminders() {
-    var _a, _b;
+    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         for (let user of yield User.find({})) {
             if (!user.reminder)
                 continue;
-            const defaultChannel = (_b = (_a = user.extras) === null || _a === void 0 ? void 0 : _a.defaultChannel) !== null && _b !== void 0 ? _b : Bio.DEFAULT_CHANNEL;
-            const channel = yield client.channels.fetch(defaultChannel);
-            if (!channel)
-                continue;
             for (let taskNdTS of Object.entries(user.reminder)) {
                 const task = taskNdTS[0];
+                if (task == 'null')
+                    continue;
+                const defaultChannel = (_b = (_a = user.extras) === null || _a === void 0 ? void 0 : _a.defaultChannel) !== null && _b !== void 0 ? _b : ((_d = (_c = user.lastPlayed) === null || _c === void 0 ? void 0 : _c[task]) !== null && _d !== void 0 ? _d : Bio.DEFAULT_CHANNEL);
+                const channel = yield client.channels.fetch(defaultChannel);
+                if (!channel)
+                    continue;
                 const timestamp = taskNdTS[1];
                 yield manageReminders(task, user.id, timestamp, channel);
             }
