@@ -1,6 +1,6 @@
 import { Bot } from 'breezer.js';
 import Bio from './data/bio.json' assert { type: "json" };
-import nHandler from './helpers/nHandler.js';
+import nHandler, { reRegisterReminders } from './helpers/nHandler.js';
 import mongoose from 'mongoose';
 
 mongoose.set('strictQuery', false);
@@ -31,5 +31,9 @@ bot.bot.on('messageCreate', async msg => {
     }
 });
 
-bot.go(() => console.log('Logged In'));
+bot.go(async () => {
+    console.log(`Logged in as ${bot.bot.user?.username}`);
+    await reRegisterReminders();
+    console.log('Reminders Re-registered!');
+});
 export const client = bot.bot;
