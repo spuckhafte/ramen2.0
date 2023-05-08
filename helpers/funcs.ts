@@ -99,6 +99,9 @@ export async function updateDb(query:StdObject, updateWhat:string, updateValue:a
 };
 
 export async function reRegisterReminders() {
+    let prevChannel =  await client.channels.fetch(Bio.DEFAULT_CHANNEL) as TextChannel;
+    const nbPlay1 = prevChannel;
+
     for (let user of await User.find({})) {
         if (!user.reminder) continue;
 
@@ -108,7 +111,18 @@ export async function reRegisterReminders() {
 
             const defaultChannel = user.extras?.defaultChannel 
                 ?? (user.lastPlayed?.[task] ?? Bio.DEFAULT_CHANNEL);
-            const channel = await client.channels.fetch(defaultChannel);
+
+            let channel = prevChannel;
+            if (defaultChannel != prevChannel.id) {
+                try {
+                    channel = await client.channels.fetch(defaultChannel) as TextChannel;
+                } catch (e) {
+                    if (user.extras?.defaultChannel) 
+                        channel =  await client.channels.fetch(user.extras.defaultChannel) as TextChannel;
+                    else channel = nbPlay1;
+                }
+                prevChannel = channel;
+            }
             if (!channel) continue;
 
             const timestamp = taskNdTS[1];

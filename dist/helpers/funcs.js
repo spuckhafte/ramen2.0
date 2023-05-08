@@ -117,8 +117,10 @@ export function updateDb(query, updateWhat, updateValue, fetch = false) {
 }
 ;
 export function reRegisterReminders() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     return __awaiter(this, void 0, void 0, function* () {
+        let prevChannel = yield client.channels.fetch(Bio.DEFAULT_CHANNEL);
+        const nbPlay1 = prevChannel;
         for (let user of yield User.find({})) {
             if (!user.reminder)
                 continue;
@@ -127,7 +129,19 @@ export function reRegisterReminders() {
                 if (task == 'null')
                     continue;
                 const defaultChannel = (_b = (_a = user.extras) === null || _a === void 0 ? void 0 : _a.defaultChannel) !== null && _b !== void 0 ? _b : ((_d = (_c = user.lastPlayed) === null || _c === void 0 ? void 0 : _c[task]) !== null && _d !== void 0 ? _d : Bio.DEFAULT_CHANNEL);
-                const channel = yield client.channels.fetch(defaultChannel);
+                let channel = prevChannel;
+                if (defaultChannel != prevChannel.id) {
+                    try {
+                        channel = (yield client.channels.fetch(defaultChannel));
+                    }
+                    catch (e) {
+                        if ((_e = user.extras) === null || _e === void 0 ? void 0 : _e.defaultChannel)
+                            channel = (yield client.channels.fetch(user.extras.defaultChannel));
+                        else
+                            channel = nbPlay1;
+                    }
+                    prevChannel = channel;
+                }
                 if (!channel)
                     continue;
                 const timestamp = taskNdTS[1];

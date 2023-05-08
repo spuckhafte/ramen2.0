@@ -44,6 +44,8 @@ bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function*
 bot.go(() => __awaiter(void 0, void 0, void 0, function* () {
     var _c;
     console.log(`Logged in as ${(_c = bot.bot.user) === null || _c === void 0 ? void 0 : _c.username}`);
+}));
+bot.bot.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
     yield reRegisterReminders();
     console.log('Reminders Re-registered!');
 }));
