@@ -9,15 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Bot } from 'breezer.js';
 import Bio from './data/bio.json' assert { type: "json" };
-import nHandler, { reRegisterReminders } from './helpers/nHandler.js';
+import nHandler from './helpers/nHandler.js';
 import mongoose from 'mongoose';
 import reportHelp from './helpers/reportHelp.js';
+import { reRegisterReminders } from './helpers/funcs';
 mongoose.set('strictQuery', false);
 mongoose.connect(Bio.DB, (e) => console.log(e ? "Error: " + e : "[connected to DB]"));
 const bot = new Bot({
     commandsFolder: './dist/commands',
     token: Bio.BOT_TOKEN,
-    prefix: "r+ ",
+    prefix: "r ",
     lang: '.js'
 });
 const nPrefix = 'n';

@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema({
     stats: {
         mission: DNumber,
         report: DNumber,
-        tower: DNumber,
         challenge: DNumber
     },
     extras: {
@@ -30,7 +29,6 @@ const userSchema = new mongoose.Schema({
     weekly: {
         mission: DNumber,
         report: DNumber,
-        tower: DNumber,
         challenge: DNumber
     },
     server_specific_stats: {

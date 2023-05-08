@@ -11,6 +11,7 @@ import Bio from '../data/bio.json' assert { type: "json" };
 import { client } from "../index.js";
 import User from "../schema/User.js";
 import premium from '../data/premium.json' assert { type: "json" };
+import { manageReminders } from "./remHandler";
 export const remIntervals = {
     mission: 1 * 60,
     report: 10 * 60,
@@ -115,6 +116,26 @@ export function updateDb(query, updateWhat, updateValue, fetch = false) {
     });
 }
 ;
+export function reRegisterReminders() {
+    var _a, _b, _c, _d;
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let user of yield User.find({})) {
+            if (!user.reminder)
+                continue;
+            for (let taskNdTS of Object.entries(user.reminder)) {
+                const task = taskNdTS[0];
+                if (task == 'null')
+                    continue;
+                const defaultChannel = (_b = (_a = user.extras) === null || _a === void 0 ? void 0 : _a.defaultChannel) !== null && _b !== void 0 ? _b : ((_d = (_c = user.lastPlayed) === null || _c === void 0 ? void 0 : _c[task]) !== null && _d !== void 0 ? _d : Bio.DEFAULT_CHANNEL);
+                const channel = yield client.channels.fetch(defaultChannel);
+                if (!channel)
+                    continue;
+                const timestamp = taskNdTS[1];
+                yield manageReminders(task, user.id, timestamp, channel);
+            }
+        }
+    });
+}
 export function timeToMs(time) {
     if (!time.includes('d'))
         time = '0d:' + time;

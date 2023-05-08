@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import User from "../schema/User.js";
 import { Tasks, TimeoutStore } from "../types";
 import { register, remIntervals, updateDb } from "./funcs.js";
@@ -26,11 +26,8 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
 
     if (user.extras?.defaultChannel) 
         channel = await client.channels.fetch(user.extras.defaultChannel) as TextChannel;
-    if (!channel) {
-        if (user.extras?.defaultChannel) 
-            channel = await client.channels.fetch(user.extras.defaultChannel) as TextChannel;
-        else channel = await client.channels.fetch(Bio.DEFAULT_CHANNEL) as TextChannel;
-    }
+    if (!channel)
+        channel = await client.channels.fetch(Bio.DEFAULT_CHANNEL) as TextChannel;
 
     if (!channel) return;
     if (!channel.guild.members.me?.permissionsIn(channel).has('SEND_MESSAGES')) return;
@@ -43,5 +40,5 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     }, ((remIntervals[task] * 1000) - tickedTime) - delay);
     
     timeouts[`${id}-${task}`] = timeout;
-    return 'added'
+    return 'added';
 }

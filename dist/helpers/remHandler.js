@@ -14,7 +14,7 @@ import Bio from '../data/bio.json' assert { type: "json" };
 const timeouts = {};
 const delay = 1500;
 export function manageReminders(task, id, actualTS, channel) {
-    var _a, _b, _c;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         if (timeouts[`${id}-${task}`] != undefined)
             return;
@@ -34,15 +34,11 @@ export function manageReminders(task, id, actualTS, channel) {
         yield updateDb({ id }, `reminder.${task}`, actualTS);
         if ((_a = user.extras) === null || _a === void 0 ? void 0 : _a.defaultChannel)
             channel = (yield client.channels.fetch(user.extras.defaultChannel));
-        if (!channel) {
-            if ((_b = user.extras) === null || _b === void 0 ? void 0 : _b.defaultChannel)
-                channel = (yield client.channels.fetch(user.extras.defaultChannel));
-            else
-                channel = (yield client.channels.fetch(Bio.DEFAULT_CHANNEL));
-        }
+        if (!channel)
+            channel = (yield client.channels.fetch(Bio.DEFAULT_CHANNEL));
         if (!channel)
             return;
-        if (!((_c = channel.guild.members.me) === null || _c === void 0 ? void 0 : _c.permissionsIn(channel).has('SEND_MESSAGES')))
+        if (!((_b = channel.guild.members.me) === null || _b === void 0 ? void 0 : _b.permissionsIn(channel).has('SEND_MESSAGES')))
             return;
         yield updateDb({ id }, `lastPlayed.${task}`, channel.id);
         const timeout = setTimeout(() => __awaiter(this, void 0, void 0, function* () {

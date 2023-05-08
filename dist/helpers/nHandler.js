@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { collectSignal, getTask, timeToMs } from "./funcs.js";
 import { manageReminders } from "./remHandler.js";
 import { remIntervals } from "./funcs.js";
-import User from "../schema/User.js";
-import { client } from "../index.js";
-import Bio from "../data/bio.json" assert { type: "json" };
 export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
-    const task = getTask(content.split(' ')[1]);
-    let isCd = ['cd', 'cooldown'].includes(content.split(' ')[1].trim());
+    const cmd = content.split(' ')[1];
+    if (!cmd)
+        return;
+    const task = getTask(cmd);
+    let isCd = ['cd', 'cooldown'].includes(cmd.trim());
     if (task == 'null' && !isCd)
         return;
     if (task == 'mission' || task == 'report') {
@@ -109,26 +109,6 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
         }));
     }
 });
-export function reRegisterReminders() {
-    var _a, _b, _c, _d;
-    return __awaiter(this, void 0, void 0, function* () {
-        for (let user of yield User.find({})) {
-            if (!user.reminder)
-                continue;
-            for (let taskNdTS of Object.entries(user.reminder)) {
-                const task = taskNdTS[0];
-                if (task == 'null')
-                    continue;
-                const defaultChannel = (_b = (_a = user.extras) === null || _a === void 0 ? void 0 : _a.defaultChannel) !== null && _b !== void 0 ? _b : ((_d = (_c = user.lastPlayed) === null || _c === void 0 ? void 0 : _c[task]) !== null && _d !== void 0 ? _d : Bio.DEFAULT_CHANNEL);
-                const channel = yield client.channels.fetch(defaultChannel);
-                if (!channel)
-                    continue;
-                const timestamp = taskNdTS[1];
-                yield manageReminders(task, user.id, timestamp, channel);
-            }
-        }
-    });
-}
 function timeTicked(task, remaining) {
     if (task == 'null')
         return;

@@ -10,8 +10,10 @@ import Bio from "../data/bio.json" assert { type: "json" };
 export default async (msg: Message) => {
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
 
-    const task = getTask(content.split(' ')[1]);
-    let isCd = ['cd', 'cooldown'].includes(content.split(' ')[1].trim());
+    const cmd = content.split(' ')[1];
+    if (!cmd) return;
+    const task = getTask(cmd);
+    let isCd = ['cd', 'cooldown'].includes(cmd.trim());
     if (task == 'null' && !isCd) return;
 
     if (task == 'mission' || task == 'report') {
@@ -148,25 +150,6 @@ export default async (msg: Message) => {
                 }
             })
         });
-    }
-}
-
-export async function reRegisterReminders() {
-    for (let user of await User.find({})) {
-        if (!user.reminder) continue;
-
-        for (let taskNdTS of Object.entries(user.reminder)) {
-            const task = taskNdTS[0] as Tasks;
-            if (task == 'null') continue;
-
-            const defaultChannel = user.extras?.defaultChannel 
-                ?? (user.lastPlayed?.[task] ?? Bio.DEFAULT_CHANNEL);
-            const channel = await client.channels.fetch(defaultChannel);
-            if (!channel) continue;
-
-            const timestamp = taskNdTS[1];
-            await manageReminders(task, user.id, timestamp, channel as TextChannel)
-        }
     }
 }
 

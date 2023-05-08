@@ -1,10 +1,11 @@
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import { Tasks } from "../types";
 import Bio from '../data/bio.json' assert { type: "json" };
 import { client } from "../index.js";
 import User from "../schema/User.js";
 import premium from '../data/premium.json' assert { type: "json" };
 import { StdObject } from '../types';
+import { manageReminders } from "./remHandler";
 
 export const remIntervals = { // seconds
     mission: 1 * 60,
@@ -96,6 +97,25 @@ export async function updateDb(query:StdObject, updateWhat:string, updateValue:a
         return null;
     }
 };
+
+export async function reRegisterReminders() {
+    for (let user of await User.find({})) {
+        if (!user.reminder) continue;
+
+        for (let taskNdTS of Object.entries(user.reminder)) {
+            const task = taskNdTS[0] as Tasks;
+            if (task == 'null') continue;
+
+            const defaultChannel = user.extras?.defaultChannel 
+                ?? (user.lastPlayed?.[task] ?? Bio.DEFAULT_CHANNEL);
+            const channel = await client.channels.fetch(defaultChannel);
+            if (!channel) continue;
+
+            const timestamp = taskNdTS[1];
+            await manageReminders(task, user.id, timestamp, channel as TextChannel)
+        }
+    }
+}
 
 export function timeToMs(time:string) {
     if (!time.includes('d')) time = '0d:' + time;
