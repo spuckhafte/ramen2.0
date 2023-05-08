@@ -11,7 +11,7 @@ import Bio from '../data/bio.json' assert { type: "json" };
 import { client } from "../index.js";
 import User from "../schema/User.js";
 import premium from '../data/premium.json' assert { type: "json" };
-import { manageReminders } from "./remHandler";
+import { manageReminders } from "./remHandler.js";
 export const remIntervals = {
     mission: 1 * 60,
     report: 10 * 60,

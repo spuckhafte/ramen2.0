@@ -12,7 +12,7 @@ import Bio from './data/bio.json' assert { type: "json" };
 import nHandler from './helpers/nHandler.js';
 import mongoose from 'mongoose';
 import reportHelp from './helpers/reportHelp.js';
-import { reRegisterReminders } from './helpers/funcs';
+import { reRegisterReminders } from './helpers/funcs.js';
 mongoose.set('strictQuery', false);
 mongoose.connect(Bio.DB, (e) => console.log(e ? "Error: " + e : "[connected to DB]"));
 const bot = new Bot({

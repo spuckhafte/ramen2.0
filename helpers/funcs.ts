@@ -5,7 +5,7 @@ import { client } from "../index.js";
 import User from "../schema/User.js";
 import premium from '../data/premium.json' assert { type: "json" };
 import { StdObject } from '../types';
-import { manageReminders } from "./remHandler";
+import { manageReminders } from "./remHandler.js";
 
 export const remIntervals = { // seconds
     mission: 1 * 60,
