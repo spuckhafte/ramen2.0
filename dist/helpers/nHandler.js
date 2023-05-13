@@ -31,19 +31,17 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
         }));
     }
     if (task == 'train') {
-        const verifyEmbed = new RegExp(`(${msg.author.username})|(training)`, 'g');
-        collectSignal(msg, 'em.title', m => { var _a, _b; return !!((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.match(verifyEmbed)); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
+        collectSignal(msg, 'em.title', m => { var _a, _b; return stdCheck((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) !== null && _b !== void 0 ? _b : '', msg.author.username, 'training'); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
             yield manageReminders("train", msg.author.id, "now", msg.channel);
         }));
     }
     if (task == 'daily') {
-        collectSignal(msg, 'em.title', m => { var _a, _b; return !!((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.includes(`${msg.author.id}#${msg.author.discriminator}'s daily`)); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
+        collectSignal(msg, 'em.title', m => { var _a, _b; return stdCheck((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) !== null && _b !== void 0 ? _b : '', msg.author.username, 'daily'); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
             yield manageReminders("daily", msg.author.id, "now", msg.channel);
         }));
     }
     if (task == 'weekly') {
-        const verifyMsg = new RegExp(`(${msg.author.username})|(weekly)`);
-        collectSignal(msg, 'em.title', m => { var _a, _b; return !!((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.match(verifyMsg)); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
+        collectSignal(msg, 'em.title', m => { var _a, _b; return !!stdCheck((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) !== null && _b !== void 0 ? _b : '', msg.author.username, 'weekly'); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
             yield manageReminders("weekly", msg.author.id, "now", msg.channel);
         }));
     }
@@ -113,4 +111,7 @@ function timeTicked(task, remaining) {
     if (task == 'null')
         return;
     return (remIntervals[task] * 1000 - remaining);
+}
+function stdCheck(content, username, task) {
+    return content.includes(username) && content.includes(task);
 }

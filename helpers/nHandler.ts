@@ -3,9 +3,6 @@ import { collectSignal, getTask, timeToMs } from "./funcs.js";
 import { manageReminders } from "./remHandler.js";
 import { Tasks } from "../types.js";
 import { remIntervals } from "./funcs.js";
-import User from "../schema/User.js";
-import { client } from "../index.js";
-import Bio from "../data/bio.json" assert { type: "json" };
 
 export default async (msg: Message) => {
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
@@ -36,10 +33,9 @@ export default async (msg: Message) => {
     }
 
     if (task == 'train') {
-        const verifyEmbed = new RegExp(`(${msg.author.username})|(training)`, 'g');
         collectSignal(
             msg, 'em.title',
-            m =>  !!m.embeds[0]?.title?.match(verifyEmbed)
+            m =>  stdCheck(m.embeds[0]?.title ?? '', msg.author.username, 'training')
         ).on('collect', async () => {
             await manageReminders("train", msg.author.id, "now", msg.channel as TextChannel);
         });
@@ -48,17 +44,16 @@ export default async (msg: Message) => {
     if (task == 'daily') {
         collectSignal(
             msg, 'em.title',
-            m => !!m.embeds[0]?.title?.includes(`${msg.author.id}#${msg.author.discriminator}'s daily`)
+            m => stdCheck(m.embeds[0]?.title ?? '', msg.author.username, 'daily')
         ).on('collect', async () => {
             await manageReminders("daily", msg.author.id, "now", msg.channel as TextChannel);
         });
     }
 
     if (task == 'weekly') {
-        const verifyMsg = new RegExp(`(${msg.author.username})|(weekly)`);
         collectSignal(
             msg, 'em.title',
-            m => !!m.embeds[0]?.title?.match(verifyMsg)
+            m => !!stdCheck(m.embeds[0]?.title ?? '', msg.author.username, 'weekly')
         ).on('collect', async () => {
             await manageReminders("weekly", msg.author.id, "now", msg.channel as TextChannel);
         });
@@ -156,4 +151,8 @@ export default async (msg: Message) => {
 function timeTicked(task:Tasks, remaining:number) {
     if (task == 'null') return;
     return (remIntervals[task] * 1000 - remaining);
+}
+
+function stdCheck(content: string, username:string, task:'training'|'cooldown'|'weekly'|'daily') {
+    return content.includes(username) && content.includes(task);
 }
