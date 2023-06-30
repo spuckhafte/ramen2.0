@@ -13,6 +13,7 @@ import nHandler from './helpers/nHandler.js';
 import mongoose from 'mongoose';
 import reportHelp from './helpers/reportHelp.js';
 import { reRegisterReminders } from './helpers/funcs.js';
+import balHandler from './helpers/balHandler.js';
 mongoose.set('strictQuery', false);
 mongoose.connect(Bio.DB, (e) => console.log(e ? "Error: " + e : "[connected to DB]"));
 const bot = new Bot({
@@ -21,9 +22,10 @@ const bot = new Bot({
     prefix: "r ",
     lang: '.js'
 });
+export const client = bot.bot;
 const nPrefix = 'n';
 bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c, _d;
     if (!msg.guild)
         return;
     if (Bio.ADMIN.TESTING) {
@@ -39,14 +41,16 @@ bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function*
     if (msg.author.id == Bio.NB) {
         if ((_b = (_a = msg.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.includes('report'))
             yield reportHelp(msg);
+        if ((_d = (_c = msg.embeds[0]) === null || _c === void 0 ? void 0 : _c.title) === null || _d === void 0 ? void 0 : _d.includes('balance'))
+            yield msg.react('🤑');
     }
 }));
+bot.bot.on('messageReactionAdd', (rxn, user) => __awaiter(void 0, void 0, void 0, function* () { return yield balHandler(rxn, user); }));
 bot.go(() => __awaiter(void 0, void 0, void 0, function* () {
-    var _c;
-    console.log(`Logged in as ${(_c = bot.bot.user) === null || _c === void 0 ? void 0 : _c.username}`);
+    var _e;
+    console.log(`Logged in as ${(_e = bot.bot.user) === null || _e === void 0 ? void 0 : _e.username}`);
 }));
 bot.bot.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
     yield reRegisterReminders();
     console.log('Reminders Re-registered!');
 }));
-export const client = bot.bot;

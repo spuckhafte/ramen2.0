@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema({
         challenge: DNumber
     },
     extras: {
-        defaultChannel: String
+        defaultChannel: String,
+        online: {
+            type: Boolean,
+            default: false
+        }
     },
     weekly: {
         mission: DNumber,
@@ -59,9 +63,9 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
-    getPings: {
+    blockPings: {
         type: [String],
-        default: ['mission', 'report', 'tower', 'train', 'adventure', 'daily', 'vote', 'weekly', 'challenge', 'quest',]
+        default: []
     },
 
     lastPlayed: {
@@ -75,7 +79,7 @@ const userSchema = new mongoose.Schema({
         weekly: String,
         challenge: String,
         quest: String
-    }
+    },
 });
 
 const User = mongoose.model("user", userSchema);

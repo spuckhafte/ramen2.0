@@ -47,6 +47,21 @@ export function collectSignal(msg, from, condition, time = 1, max = 1, author = 
     };
     return msg.channel.createMessageCollector({ filter, time: time * 1000, max });
 }
+export function statsManager(msg, task, userId, usernames) {
+    setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+        var _a;
+        const authAns = task == 'mission' ? 'Correct' : 'Successful';
+        if (!((_a = msg.embeds[0].footer) === null || _a === void 0 ? void 0 : _a.text.includes(authAns)))
+            return;
+        const user = yield User.findOne({ id: userId });
+        if (!user || !user.stats || !user.weekly)
+            return;
+        console.log(task, user.id, user.username);
+        user.stats[task] += 1;
+        user.weekly[task] += 1;
+        yield user.save();
+    }), (20 + 1) * 1000);
+}
 export function getTask(t) {
     if (t == 'm' || t == 'mission')
         return 'mission';

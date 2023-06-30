@@ -5,7 +5,7 @@ import { register, remIntervals, updateDb } from "./funcs.js";
 import { client } from "../index.js";
 import Bio from '../data/bio.json' assert { type: "json" };
 
-const timeouts:TimeoutStore = {} // { "4539454395349-mission": 2342, "userid-task": timeoutId }
+export const timeouts:TimeoutStore = {} // { "4539454395349-mission": 2342, "userid-task": timeoutId }
 const delay = 1500;
 
 export async function manageReminders(task:Tasks, id:string, actualTS:'now'|number, channel:TextChannel|null) {
@@ -15,7 +15,7 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     let user = await User.findOne({ id });
     if (!user?.id) user = await register(id);
     if (!user) return;
-    if (!user.getPings.includes(task)) return;
+    if (user.blockPings.includes(task)) return;
 
     actualTS = (actualTS == 'now' ? Date.now() : actualTS) as number;
 
@@ -40,5 +40,6 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     }, ((remIntervals[task] * 1000) - tickedTime) - delay);
     
     timeouts[`${id}-${task}`] = timeout;
+
     return 'added';
 }

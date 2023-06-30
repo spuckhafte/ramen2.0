@@ -44,6 +44,23 @@ export function collectSignal(
     return msg.channel.createMessageCollector({ filter, time: time * 1000, max });
 } 
 
+export function statsManager(msg:Message, task:'mission'|'report', userId:string, usernames?:StdObject) {
+    setTimeout(async () => {
+        const authAns = task == 'mission' ? 'Correct' : 'Successful';
+        if (!msg.embeds[0].footer?.text.includes(authAns)) return;
+
+        const user = await User.findOne({ id: userId });
+        if (!user || !user.stats || !user.weekly) return;
+
+        console.log(task, user.id, user.username);
+
+        user.stats[task] += 1;
+        user.weekly[task] += 1;
+
+        await user.save();
+    }, (20 + 1) * 1000);
+}
+
 export function getTask(t:string):Tasks {
     if (t == 'm' || t == 'mission') return 'mission';
     if (t == 'r' || t == 'report') return 'report';
