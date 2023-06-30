@@ -7,9 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { collectSignal, getTask, timeToMs } from "./funcs.js";
+import { collectSignal, getTask, statsManager, timeToMs, updateDb } from "./funcs.js";
 import { manageReminders } from "./remHandler.js";
 import { remIntervals } from "./funcs.js";
+import User from "../schema/User.js";
+const RESET_ONLINE = 60;
+const clearUserOnlineStack = {};
 export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
     const cmd = content.split(' ')[1];
@@ -19,15 +22,25 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     let isCd = ['cd', 'cooldown'].includes(cmd.trim());
     if (task == 'null' && !isCd)
         return;
+    setImmediate(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield updateDb({ id: msg.author.id }, 'extras.online', true);
+        yield updateDb({ id: msg.author.id }, 'username', msg.author.username);
+        if (clearUserOnlineStack[msg.author.id])
+            clearInterval(clearUserOnlineStack[msg.author.id]);
+        clearUserOnlineStack[msg.author.id] = setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield updateDb({ id: msg.author.id }, 'extras.online', false);
+            delete clearUserOnlineStack[msg.author.id];
+        }), RESET_ONLINE * 1000);
+    }));
     if (task == 'mission' || task == 'report') {
-        collectSignal(msg, 'em.title', m => { var _a, _b; return !!((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.includes(msg.author.username)); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
+        collectSignal(msg, 'em.title', m => { var _a, _b; return !!((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.includes(msg.author.username)); }).on('collect', (botMsg) => __awaiter(void 0, void 0, void 0, function* () {
             yield manageReminders(task, msg.author.id, "now", msg.channel);
+            statsManager(botMsg, task, msg.author.id);
         }));
     }
     if (task == 'tower') {
         collectSignal(msg, 'msg.content', m => m.content.includes(msg.author.username)).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
-            const a = yield manageReminders("tower", msg.author.id, "now", msg.channel);
-            console.log(a);
+            yield manageReminders("tower", msg.author.id, "now", msg.channel);
         }));
     }
     if (task == 'train') {
@@ -41,7 +54,7 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
         }));
     }
     if (task == 'weekly') {
-        collectSignal(msg, 'em.title', m => { var _a, _b; return !!stdCheck((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) !== null && _b !== void 0 ? _b : '', msg.author.username, 'weekly'); }).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
+        collectSignal(msg, 'msg.content', m => !!stdCheck(m.content, msg.author.username, 'weekly')).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
             yield manageReminders("weekly", msg.author.id, "now", msg.channel);
         }));
     }
@@ -62,10 +75,18 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     if (task == 'challenge') {
         let collector = collectSignal(msg, 'msg.content', m => !!m.content.includes(`**${msg.author.username}** challenged you to a fight`)).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
             var _a;
-            let target = (_a = msg.mentions.users.first()) === null || _a === void 0 ? void 0 : _a.id;
-            collectSignal(msg, 'msg.content', m => !!(m.content.trim().toLowerCase() == 'y' || m.content.trim().toLowerCase() == 'yes'), 31, 1, target).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
+            const mention = (_a = msg.mentions.users.first()) !== null && _a !== void 0 ? _a : { id: "", username: "" };
+            let target = mention.id;
+            collectSignal(msg, 'msg.content', m => !!(m.content.trim().toLowerCase() == 'y' || m.content.trim().toLowerCase() == 'yes'), 31, 1, target)
+                .on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
                 yield manageReminders('challenge', msg.author.id, 'now', msg.channel);
                 collector.dispose(msg);
+                const user = yield User.findOne({ id: msg.author.id });
+                if (!user || !user.stats || !user.weekly)
+                    return;
+                user.stats[task] += 1;
+                user.weekly[task] += 1;
+                yield user.save();
             }));
         }));
     }

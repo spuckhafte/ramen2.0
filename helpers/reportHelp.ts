@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 
 export default async (msg:Message) => {
     const nums = ['1', '2', '3', '4', '5']
@@ -10,6 +10,9 @@ export default async (msg:Message) => {
     const num = nums.find(i => report.includes(i));
     const color = colors.find(i => report.includes(i));
     const location = locations.find(i => report.includes(i));
+
+    if (!msg.guild?.members.me?.permissionsIn(msg.channel as TextChannel).has('SEND_MESSAGES')) 
+        return;
 
     await msg.reply(`**Hint: __\`${num} ${color} ${location}\`__**`);
 }

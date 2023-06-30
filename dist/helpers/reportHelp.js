@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b, _c;
     const nums = ['1', '2', '3', '4', '5'];
     const colors = ['white', 'black', 'grey'];
     const locations = ['forest', 'dango', 'gate'];
@@ -16,5 +16,7 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const num = nums.find(i => report.includes(i));
     const color = colors.find(i => report.includes(i));
     const location = locations.find(i => report.includes(i));
+    if (!((_c = (_b = msg.guild) === null || _b === void 0 ? void 0 : _b.members.me) === null || _c === void 0 ? void 0 : _c.permissionsIn(msg.channel).has('SEND_MESSAGES')))
+        return;
     yield msg.reply(`**Hint: __\`${num} ${color} ${location}\`__**`);
 });

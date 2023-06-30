@@ -11,7 +11,7 @@ import User from "../schema/User.js";
 import { register, remIntervals, updateDb } from "./funcs.js";
 import { client } from "../index.js";
 import Bio from '../data/bio.json' assert { type: "json" };
-const timeouts = {};
+export const timeouts = {};
 const delay = 1500;
 export function manageReminders(task, id, actualTS, channel) {
     var _a, _b;
@@ -25,7 +25,7 @@ export function manageReminders(task, id, actualTS, channel) {
             user = yield register(id);
         if (!user)
             return;
-        if (!user.getPings.includes(task))
+        if (user.blockPings.includes(task))
             return;
         actualTS = (actualTS == 'now' ? Date.now() : actualTS);
         if (Date.now() >= (actualTS + remIntervals[task] * 1000))

@@ -8,6 +8,6 @@ export default class extends Command {
     }
 
     async execute() {
-        await this.msg?.channel.send('Pong!');
+        
     }
 }

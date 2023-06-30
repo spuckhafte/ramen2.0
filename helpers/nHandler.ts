@@ -1,8 +1,12 @@
 import { Message, TextChannel } from "discord.js";
-import { collectSignal, getTask, timeToMs } from "./funcs.js";
+import { collectSignal, getTask, statsManager, timeToMs, updateDb } from "./funcs.js";
 import { manageReminders } from "./remHandler.js";
 import { Tasks } from "../types.js";
 import { remIntervals } from "./funcs.js";
+import User from "../schema/User.js";
+
+const RESET_ONLINE = 60; // seconds
+const clearUserOnlineStack: { [index: string]: NodeJS.Timer } = {};
 
 export default async (msg: Message) => {
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
@@ -13,12 +17,24 @@ export default async (msg: Message) => {
     let isCd = ['cd', 'cooldown'].includes(cmd.trim());
     if (task == 'null' && !isCd) return;
 
+    setImmediate(async () => {
+        await updateDb({ id: msg.author.id }, 'extras.online', true);
+        await updateDb({ id: msg.author.id }, 'username', msg.author.username)
+        if (clearUserOnlineStack[msg.author.id]) 
+            clearInterval(clearUserOnlineStack[msg.author.id]);
+        clearUserOnlineStack[msg.author.id] = setInterval(async () => {
+            await updateDb({ id: msg.author.id }, 'extras.online', false);
+            delete clearUserOnlineStack[msg.author.id];
+        }, RESET_ONLINE * 1000);
+    });
+
     if (task == 'mission' || task == 'report') {
         collectSignal(
             msg, 'em.title', 
             m => !!m.embeds[0]?.title?.includes(msg.author.username)
-        ).on('collect', async () => {
+        ).on('collect', async botMsg => {
             await manageReminders(task, msg.author.id, "now", msg.channel as TextChannel);
+            statsManager(botMsg, task, msg.author.id);
         });
     }
 
@@ -27,8 +43,7 @@ export default async (msg: Message) => {
             msg, 'msg.content',
             m => m.content.includes(msg.author.username)
         ).on('collect', async () => {
-            const a = await manageReminders("tower", msg.author.id, "now", msg.channel as TextChannel);
-            console.log(a)
+            await manageReminders("tower", msg.author.id, "now", msg.channel as TextChannel);
         });
     }
 
@@ -38,7 +53,7 @@ export default async (msg: Message) => {
             m =>  stdCheck(m.embeds[0]?.title ?? '', msg.author.username, 'training')
         ).on('collect', async () => {
             await manageReminders("train", msg.author.id, "now", msg.channel as TextChannel);
-        });
+        }); 
     }
 
     if (task == 'daily') {
@@ -52,8 +67,8 @@ export default async (msg: Message) => {
 
     if (task == 'weekly') {
         collectSignal(
-            msg, 'em.title',
-            m => !!stdCheck(m.embeds[0]?.title ?? '', msg.author.username, 'weekly')
+            msg, 'msg.content',
+            m => !!stdCheck(m.content, msg.author.username, 'weekly')
         ).on('collect', async () => {
             await manageReminders("weekly", msg.author.id, "now", msg.channel as TextChannel);
         });
@@ -87,14 +102,25 @@ export default async (msg: Message) => {
             msg, 'msg.content',
             m => !!m.content.includes(`**${msg.author.username}** challenged you to a fight`)
         ).on('collect', async () => {
-            let target = msg.mentions.users.first()?.id;
-            collectSignal(
+            const mention = msg.mentions.users.first() ?? { id: "", username: "" };
+            let target = mention.id;
+
+            collectSignal(  
                 msg, 'msg.content',
                 m => !!(m.content.trim().toLowerCase() == 'y' || m.content.trim().toLowerCase() == 'yes'),
                 31, 1, target
-            ).on('collect', async () => {
+            )
+            .on('collect', async () => {
                 await manageReminders('challenge', msg.author.id, 'now', msg.channel as TextChannel);
                 collector.dispose(msg);
+
+                const user = await User.findOne({ id: msg.author.id });
+                if (!user || !user.stats || !user.weekly) return;
+
+                user.stats[task] += 1;
+                user.weekly[task] += 1;
+
+                await user.save();
             })
         })
     }
