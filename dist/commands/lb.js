@@ -103,7 +103,6 @@ export default class extends Command {
                     page = lastPage;
                 if (btn.customId == 'yourPage') {
                     const userIndex = pageDetails.data.findIndex(val => { var _a; return val.id == ((_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.id); });
-                    console.log(userIndex);
                     page = Math.ceil((userIndex + 1) / 10);
                 }
                 const newPage = yield getPage(page, scope, task, this.msg);
