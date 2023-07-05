@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Command } from "breezer.js";
+import { MessageEmbed } from "discord.js";
+import { client } from "../index.js";
+import helpText from "../helpers/helpText.js";
 export default class extends Command {
     constructor() {
         super({
@@ -15,7 +18,19 @@ export default class extends Command {
         });
     }
     execute() {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
+            const embed = new MessageEmbed({
+                author: {
+                    name: "RAMEN GUIDE 📖",
+                    iconURL: (_a = client.user) === null || _a === void 0 ? void 0 : _a.displayAvatarURL()
+                },
+                description: helpText,
+                footer: {
+                    text: 'Help msg under development 🔨'
+                }
+            });
+            yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.channel.send({ embeds: [embed] }));
         });
     }
 }
