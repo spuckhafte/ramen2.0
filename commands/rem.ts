@@ -75,6 +75,7 @@ export default class extends Command {
                 allowedMentions: { repliedUser: false }
             });
 
+            
             const timeoutKeys = Object.keys(timeouts);
             const timeoutValues = Object.values(timeouts);
             
