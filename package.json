@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "breezer.js": "^0.4.4",
+    "breezer.js": "^0.4.5",
     "discord.js": "^13.11.0",
     "mongoose": "^6.6.2"
   },
