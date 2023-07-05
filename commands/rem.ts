@@ -33,8 +33,9 @@ export default class extends Command {
         }
 
         const user = await User.findOne({ id: this.msg?.author.id });
-        const allTasks = ['mission', 'report', 'tower', 'adventure', 
-            'daily', 'vote', 'weekly', 'challenge', 'quest'
+        const allTasks = [
+            'mission', 'report', 'tower', 'adventure', 
+            'daily', 'vote', 'weekly', 'challenge', 'quest', 'train'
         ];
         if (!user) return;
 
@@ -55,7 +56,7 @@ export default class extends Command {
 
             if (query == 'all') user.blockPings = [...allTasks];
             else {
-                if (!task) {
+                if (task == 'null') {
                     this.msg?.reply({ 
                         content: `**\`${query}\` is not a valid task!**`, 
                         allowedMentions: { repliedUser: false }

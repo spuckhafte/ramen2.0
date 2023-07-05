@@ -111,7 +111,6 @@ export default class extends Command { // r lb m g
             if (btn.customId == 'ff') page = lastPage
             if (btn.customId == 'yourPage') {
                 const userIndex = pageDetails.data.findIndex(val => val.id == this.msg?.author.id);
-                console.log(userIndex)
                 page = Math.ceil((userIndex + 1) / 10);
             }
 
