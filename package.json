@@ -2,7 +2,8 @@
   "dependencies": {
     "breezer.js": "^0.4.3",
     "discord.js": "^13.11.0",
-    "mongoose": "^6.6.2"
+    "mongoose": "^6.6.2",
+    "typescript": "^5.1.6"
   },
   "scripts": {
     "build": "tsc",
@@ -10,7 +11,6 @@
     "start": "node ./dist/"
   },
   "devDependencies": {
-    "tsc": "^2.0.4",
-    "typescript": "^5.1.6"
+    "tsc": "^2.0.4"
   }
 }
