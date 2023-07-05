@@ -31,7 +31,8 @@ export default class extends Command {
                 }));
             }
             const user = yield User.findOne({ id: (_b = this.msg) === null || _b === void 0 ? void 0 : _b.author.id });
-            const allTasks = ['mission', 'report', 'tower', 'adventure',
+            const allTasks = [
+                'mission', 'report', 'tower', 'adventure',
                 'daily', 'vote', 'weekly', 'challenge', 'quest'
             ];
             if (!user)
@@ -52,7 +53,7 @@ export default class extends Command {
                 if (query == 'all')
                     user.blockPings = [...allTasks];
                 else {
-                    if (!task) {
+                    if (task == 'null') {
                         (_d = this.msg) === null || _d === void 0 ? void 0 : _d.reply({
                             content: `**\`${query}\` is not a valid task!**`,
                             allowedMentions: { repliedUser: false }
