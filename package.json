@@ -8,5 +8,8 @@
     "build": "tsc",
     "test": "tsc && node ./dist/",
     "start": "node ./dist/"
+  },
+  "devDependencies": {
+    "tsc": "^2.0.4"
   }
 }
