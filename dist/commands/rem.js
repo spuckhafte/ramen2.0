@@ -33,7 +33,7 @@ export default class extends Command {
             const user = yield User.findOne({ id: (_b = this.msg) === null || _b === void 0 ? void 0 : _b.author.id });
             const allTasks = [
                 'mission', 'report', 'tower', 'adventure',
-                'daily', 'vote', 'weekly', 'challenge', 'quest'
+                'daily', 'vote', 'weekly', 'challenge', 'quest', 'train'
             ];
             if (!user)
                 return;

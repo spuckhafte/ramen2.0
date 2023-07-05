@@ -35,7 +35,7 @@ export default class extends Command {
         const user = await User.findOne({ id: this.msg?.author.id });
         const allTasks = [
             'mission', 'report', 'tower', 'adventure', 
-            'daily', 'vote', 'weekly', 'challenge', 'quest'
+            'daily', 'vote', 'weekly', 'challenge', 'quest', 'train'
         ];
         if (!user) return;
 
