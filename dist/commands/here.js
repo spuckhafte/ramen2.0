@@ -29,7 +29,10 @@ export default class extends Command {
                 yield ((_e = this.msg) === null || _e === void 0 ? void 0 : _e.reply('**Personal channel cleared!**'));
             }
             else {
-                yield ((_f = this.msg) === null || _f === void 0 ? void 0 : _f.reply("`r here clear/clr` to clear your default channel"));
+                yield ((_f = this.msg) === null || _f === void 0 ? void 0 : _f.reply({
+                    content: "**`r here clear/clr`: clears your default channel.**",
+                    allowedMentions: { repliedUser: false }
+                }));
             }
         });
     }
