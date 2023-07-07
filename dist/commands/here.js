@@ -16,16 +16,20 @@ export default class extends Command {
         });
     }
     execute() {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             const [action] = this.extract();
             if (!action) {
                 yield updateDb({ id: (_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.id }, 'extras.defaultChannel', (_b = this.msg) === null || _b === void 0 ? void 0 : _b.channel.id);
                 yield ((_c = this.msg) === null || _c === void 0 ? void 0 : _c.reply('**You will now recieve your pings in this channel.**'));
+                return;
             }
             if (action == 'clear' || action == 'clr') {
                 yield updateDb({ id: (_d = this.msg) === null || _d === void 0 ? void 0 : _d.author.id }, 'extras.defaultChannel', '');
                 yield ((_e = this.msg) === null || _e === void 0 ? void 0 : _e.reply('**Personal channel cleared!**'));
+            }
+            else {
+                yield ((_f = this.msg) === null || _f === void 0 ? void 0 : _f.reply("`r here clear/clr` to clear your default channel"));
             }
         });
     }
