@@ -54,7 +54,8 @@ export default class extends Command {
                 },
                 thumbnail: {
                     url: (_k = (_j = (_h = this.msg) === null || _h === void 0 ? void 0 : _h.guild) === null || _j === void 0 ? void 0 : _j.iconURL()) !== null && _k !== void 0 ? _k : ""
-                }
+                },
+                color: "RANDOM"
             });
             const row = new MessageActionRow()
                 .addComponents(new MessageButton()

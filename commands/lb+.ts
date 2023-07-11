@@ -59,7 +59,8 @@ export default class extends Command { // r lb m g
             },
             thumbnail: {
                 url: this.msg?.guild?.iconURL() ?? ""
-            }
+            },
+            color: "RANDOM"
         });
 
         const row = new MessageActionRow()
