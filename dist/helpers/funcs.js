@@ -98,7 +98,7 @@ export function getTask(t) {
         return 'report';
     if (t == 'tow' || t == 'to' || t == 'tower')
         return 'tower';
-    if (t == 'train')
+    if (t == 'train' || t == 'tr')
         return 'train';
     if (t == 'adv' || t == 'adventure')
         return 'adventure';
