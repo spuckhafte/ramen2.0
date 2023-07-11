@@ -6,6 +6,8 @@ import User from "../schema/User.js";
 import premium from '../data/premium.json' assert { type: "json" };
 import { StdObject } from '../types';
 import { manageReminders } from "./remHandler.js";
+import Premium from "../schema/Premium.js";
+import Config from "../schema/Config.js";
 
 export const remIntervals = { // seconds
     mission: 1 * 60,
@@ -44,7 +46,8 @@ export function collectSignal(
     return msg.channel.createMessageCollector({ filter, time: time * 1000, max });
 } 
 
-export function statsManager(msg:Message, task:'mission'|'report', userId:string, usernames?:StdObject) {
+export function statsManager(msg:Message, task:'mission'|'report', userId:string) {
+
     setTimeout(async () => {
         const authAns = task == 'mission' ? 'Correct' : 'Successful';
         if (!msg.embeds[0].footer?.text.includes(authAns)) return;
@@ -58,7 +61,45 @@ export function statsManager(msg:Message, task:'mission'|'report', userId:string
         user.weekly[task] += 1;
 
         await user.save();
+
+        /* ------------ PREMIUM ------------ */
+        await premiumStat(msg.guild?.id, user.id, user.username, task);
+
     }, (20 + 1) * 1000);
+}
+
+/* ------------ PREMIUM ------------ */
+export async function premiumStat(
+    serverId:string|undefined, 
+    userId:string|undefined, 
+    username:string|undefined,
+    task:'mission'|'report'|'challenge'
+) {
+    const premServer = await Premium.findOne({ serverId });
+    if (!premServer || !premServer.serverId) return;
+
+    if (typeof premServer.till == 'number' && Date.now() > premServer.till)
+        return;
+
+    const premUser = premServer.users.find(usr => usr.userId == userId);
+    if (!premUser) {
+        premServer.users.push({
+            userId, username,
+            mission: task == 'mission' ? 1 : 0,
+            report: task == 'report' ? 1 : 0,
+            challenge: task == 'challenge' ? 1 : 0,
+        });
+    } else {
+        if (typeof premUser[task] !== "number")
+            //@ts-ignore
+            premUser[task] = 0;
+        //@ts-ignore
+        premUser[task] += 1;
+        if (premUser.username !== username)
+            premUser.username = username;
+    }
+
+    await premServer.save();
 }
 
 export function getTask(t:string):Tasks {
@@ -159,4 +200,25 @@ export function timeToMs(time:string) {
     const sec = parseInt(time.split('m:')[1]);
 
     return ((days * 24 * 60 * 60) + (hours * 60 * 60) + (min * 60) + sec) * 1000;
+}
+
+export async function isPro(msg:Message|undefined) {
+    if (!msg) return false;
+
+    const premServer = await Premium.findOne({ serverId: msg.guild?.id });
+    if (
+        !premServer || 
+        !premServer.serverId || 
+        typeof premServer.till !== 'number' ||
+        Date.now() > premServer.till
+    ) {
+        await msg.reply("**Server Specific Leaderboard is a PREMIUM feature.**\n*`r plus` for details.*");
+        return false;
+    }
+    return premServer;
+}
+
+export async function getAd() {
+    const config = await Config.findOne({ discriminator: 'only-config' });
+    return ` try "${config?.try ?? "r plus"}" `;
 }

@@ -24,7 +24,7 @@ const bot = new Bot({
 });
 export const client = bot.bot;
 const nPrefix = 'n';
-bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function* () {
+client.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
     if (!msg.guild)
         return;
@@ -45,12 +45,12 @@ bot.bot.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function*
             yield msg.react('🤑');
     }
 }));
-bot.bot.on('messageReactionAdd', (rxn, user) => __awaiter(void 0, void 0, void 0, function* () { return yield balHandler(rxn, user); }));
+client.on('messageReactionAdd', (rxn, user) => __awaiter(void 0, void 0, void 0, function* () { return yield balHandler(rxn, user); }));
 bot.go(() => __awaiter(void 0, void 0, void 0, function* () {
     var _e;
-    console.log(`Logged in as ${(_e = bot.bot.user) === null || _e === void 0 ? void 0 : _e.username}`);
+    console.log(`Logged in as ${(_e = client.user) === null || _e === void 0 ? void 0 : _e.username}`);
 }));
-bot.bot.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
+client.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
     yield reRegisterReminders();
     console.log('Reminders Re-registered!');
 }));

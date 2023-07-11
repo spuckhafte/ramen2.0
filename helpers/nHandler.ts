@@ -1,5 +1,5 @@
 import { Message, TextChannel } from "discord.js";
-import { collectSignal, getTask, statsManager, timeToMs, updateDb } from "./funcs.js";
+import { collectSignal, getTask, premiumStat, statsManager, timeToMs, updateDb } from "./funcs.js";
 import { manageReminders } from "./remHandler.js";
 import { Tasks } from "../types.js";
 import { remIntervals } from "./funcs.js";
@@ -121,6 +121,9 @@ export default async (msg: Message) => {
                 user.weekly[task] += 1;
 
                 await user.save();
+
+                /* ------------ PREMIUM ------------ */
+                await premiumStat(msg.guild?.id, user.id, msg.author.username, task);
             })
         })
     }

@@ -12,6 +12,8 @@ import { client } from "../index.js";
 import User from "../schema/User.js";
 import premium from '../data/premium.json' assert { type: "json" };
 import { manageReminders } from "./remHandler.js";
+import Premium from "../schema/Premium.js";
+import Config from "../schema/Config.js";
 export const remIntervals = {
     mission: 1 * 60,
     report: 10 * 60,
@@ -47,9 +49,9 @@ export function collectSignal(msg, from, condition, time = 1, max = 1, author = 
     };
     return msg.channel.createMessageCollector({ filter, time: time * 1000, max });
 }
-export function statsManager(msg, task, userId, usernames) {
+export function statsManager(msg, task, userId) {
     setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-        var _a;
+        var _a, _b;
         const authAns = task == 'mission' ? 'Correct' : 'Successful';
         if (!((_a = msg.embeds[0].footer) === null || _a === void 0 ? void 0 : _a.text.includes(authAns)))
             return;
@@ -60,7 +62,34 @@ export function statsManager(msg, task, userId, usernames) {
         user.stats[task] += 1;
         user.weekly[task] += 1;
         yield user.save();
+        yield premiumStat((_b = msg.guild) === null || _b === void 0 ? void 0 : _b.id, user.id, user.username, task);
     }), (20 + 1) * 1000);
+}
+export function premiumStat(serverId, userId, username, task) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const premServer = yield Premium.findOne({ serverId });
+        if (!premServer || !premServer.serverId)
+            return;
+        if (typeof premServer.till == 'number' && Date.now() > premServer.till)
+            return;
+        const premUser = premServer.users.find(usr => usr.userId == userId);
+        if (!premUser) {
+            premServer.users.push({
+                userId, username,
+                mission: task == 'mission' ? 1 : 0,
+                report: task == 'report' ? 1 : 0,
+                challenge: task == 'challenge' ? 1 : 0,
+            });
+        }
+        else {
+            if (typeof premUser[task] !== "number")
+                premUser[task] = 0;
+            premUser[task] += 1;
+            if (premUser.username !== username)
+                premUser.username = username;
+        }
+        yield premServer.save();
+    });
 }
 export function getTask(t) {
     if (t == 'm' || t == 'mission')
@@ -177,4 +206,27 @@ export function timeToMs(time) {
     const min = +(time.split('m:')[0].split('h:')[1]);
     const sec = parseInt(time.split('m:')[1]);
     return ((days * 24 * 60 * 60) + (hours * 60 * 60) + (min * 60) + sec) * 1000;
+}
+export function isPro(msg) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!msg)
+            return false;
+        const premServer = yield Premium.findOne({ serverId: (_a = msg.guild) === null || _a === void 0 ? void 0 : _a.id });
+        if (!premServer ||
+            !premServer.serverId ||
+            typeof premServer.till !== 'number' ||
+            Date.now() > premServer.till) {
+            yield msg.reply("**Server Specific Leaderboard is a PREMIUM feature.**\n*`r plus` for details.*");
+            return false;
+        }
+        return premServer;
+    });
+}
+export function getAd() {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const config = yield Config.findOne({ discriminator: 'only-config' });
+        return ` try "${(_a = config === null || config === void 0 ? void 0 : config.try) !== null && _a !== void 0 ? _a : "r plus"}" `;
+    });
 }

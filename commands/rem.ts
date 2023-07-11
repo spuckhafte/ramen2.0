@@ -1,9 +1,8 @@
 import { Command } from "breezer.js";
 import { timeouts } from "../helpers/remHandler.js";
-import { getTask } from "../helpers/funcs.js";
+import { getAd, getTask } from "../helpers/funcs.js";
 import User from "../schema/User.js";
 import { MessageEmbed } from "discord.js";
-import { client } from "../index.js";
 
 const allTasks = [
     'mission', 'report', 'tower', 'adventure', 
@@ -30,10 +29,9 @@ export default class extends Command {
             const embed = new MessageEmbed({
                 title: "⏰ LIVE REMINDERS",
                 description: tasksString !== "" ? tasksString : "**None**",
-                thumbnail: { url: client.user?.displayAvatarURL() },
                 color: "GREEN",
                 footer: {
-                    text: `${totalLive} of ${allTasks.length} tasks are live`,
+                    text: `${totalLive} of ${allTasks.length} tasks are live (${await getAd()})`,
                     iconURL: this.msg?.author.displayAvatarURL()
                 }
             });
@@ -58,10 +56,9 @@ export default class extends Command {
                 const embed = new MessageEmbed({
                     title: "🚫 BLOCKED REMINDERS",
                     description: blockTasksString !== "" ? blockTasksString : "**None**",
-                    thumbnail: { url: client.user?.displayAvatarURL() },
                     color: "DARK_RED",
                     footer: {
-                        text: `${totalBlocked} of ${allTasks.length} tasks are blocked`,
+                        text: `${totalBlocked} of ${allTasks.length} tasks are blocked (${await getAd()})`,
                         iconURL: this.msg?.author.displayAvatarURL()
                     }
                 });

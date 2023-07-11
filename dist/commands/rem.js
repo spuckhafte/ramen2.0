@@ -9,10 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Command } from "breezer.js";
 import { timeouts } from "../helpers/remHandler.js";
-import { getTask } from "../helpers/funcs.js";
+import { getAd, getTask } from "../helpers/funcs.js";
 import User from "../schema/User.js";
 import { MessageEmbed } from "discord.js";
-import { client } from "../index.js";
 const allTasks = [
     'mission', 'report', 'tower', 'adventure',
     'daily', 'vote', 'weekly', 'challenge', 'quest', 'train'
@@ -24,7 +23,7 @@ export default class extends Command {
         });
     }
     execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         return __awaiter(this, void 0, void 0, function* () {
             const [action, query] = this.extract();
             if (action == 'show') {
@@ -35,19 +34,18 @@ export default class extends Command {
                 const embed = new MessageEmbed({
                     title: "⏰ LIVE REMINDERS",
                     description: tasksString !== "" ? tasksString : "**None**",
-                    thumbnail: { url: (_a = client.user) === null || _a === void 0 ? void 0 : _a.displayAvatarURL() },
                     color: "GREEN",
                     footer: {
-                        text: `${totalLive} of ${allTasks.length} tasks are live`,
-                        iconURL: (_b = this.msg) === null || _b === void 0 ? void 0 : _b.author.displayAvatarURL()
+                        text: `${totalLive} of ${allTasks.length} tasks are live (${yield getAd()})`,
+                        iconURL: (_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.displayAvatarURL()
                     }
                 });
-                yield ((_c = this.msg) === null || _c === void 0 ? void 0 : _c.reply({
+                yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.reply({
                     embeds: [embed],
                     allowedMentions: { repliedUser: false }
                 }));
             }
-            const user = yield User.findOne({ id: (_d = this.msg) === null || _d === void 0 ? void 0 : _d.author.id });
+            const user = yield User.findOne({ id: (_c = this.msg) === null || _c === void 0 ? void 0 : _c.author.id });
             if (!user)
                 return;
             if (action == 'block') {
@@ -60,14 +58,13 @@ export default class extends Command {
                     const embed = new MessageEmbed({
                         title: "🚫 BLOCKED REMINDERS",
                         description: blockTasksString !== "" ? blockTasksString : "**None**",
-                        thumbnail: { url: (_e = client.user) === null || _e === void 0 ? void 0 : _e.displayAvatarURL() },
                         color: "DARK_RED",
                         footer: {
-                            text: `${totalBlocked} of ${allTasks.length} tasks are blocked`,
-                            iconURL: (_f = this.msg) === null || _f === void 0 ? void 0 : _f.author.displayAvatarURL()
+                            text: `${totalBlocked} of ${allTasks.length} tasks are blocked (${yield getAd()})`,
+                            iconURL: (_d = this.msg) === null || _d === void 0 ? void 0 : _d.author.displayAvatarURL()
                         }
                     });
-                    (_g = this.msg) === null || _g === void 0 ? void 0 : _g.reply({
+                    (_e = this.msg) === null || _e === void 0 ? void 0 : _e.reply({
                         embeds: [embed],
                         allowedMentions: { repliedUser: false }
                     });
@@ -79,7 +76,7 @@ export default class extends Command {
                     user.blockPings = [...allTasks];
                 else {
                     if (task == 'null') {
-                        (_h = this.msg) === null || _h === void 0 ? void 0 : _h.reply({
+                        (_f = this.msg) === null || _f === void 0 ? void 0 : _f.reply({
                             content: `**\`${query}\` is not a valid task!**`,
                             allowedMentions: { repliedUser: false }
                         });
@@ -92,7 +89,7 @@ export default class extends Command {
                 }
                 if (delta)
                     yield user.save();
-                yield ((_j = this.msg) === null || _j === void 0 ? void 0 : _j.reply({
+                yield ((_g = this.msg) === null || _g === void 0 ? void 0 : _g.reply({
                     content: `\`\`\`Reminder(s) blocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
                     allowedMentions: { repliedUser: false }
                 }));
@@ -100,7 +97,7 @@ export default class extends Command {
                 const timeoutValues = Object.values(timeouts);
                 if (query == 'all') {
                     for (let i in timeoutKeys) {
-                        if (!timeoutKeys[i].includes((_l = (_k = this.msg) === null || _k === void 0 ? void 0 : _k.author.id) !== null && _l !== void 0 ? _l : ""))
+                        if (!timeoutKeys[i].includes((_j = (_h = this.msg) === null || _h === void 0 ? void 0 : _h.author.id) !== null && _j !== void 0 ? _j : ""))
                             continue;
                         clearTimeout(timeoutValues[i]);
                         delete timeouts[timeoutKeys[i]];
@@ -108,7 +105,7 @@ export default class extends Command {
                 }
                 else {
                     for (let i in timeoutKeys) {
-                        if (timeoutKeys[i].trim() != `${(_m = this.msg) === null || _m === void 0 ? void 0 : _m.author.id}-${task}`)
+                        if (timeoutKeys[i].trim() != `${(_k = this.msg) === null || _k === void 0 ? void 0 : _k.author.id}-${task}`)
                             continue;
                         clearTimeout(timeoutValues[i]);
                         delete timeouts[timeoutKeys[i]];
@@ -125,7 +122,7 @@ export default class extends Command {
                 else {
                     const task = getTask(query);
                     if (!task) {
-                        (_o = this.msg) === null || _o === void 0 ? void 0 : _o.reply({
+                        (_l = this.msg) === null || _l === void 0 ? void 0 : _l.reply({
                             content: `**\`${query}\` is not a valid task!**`,
                             allowedMentions: { repliedUser: false }
                         });
@@ -138,7 +135,7 @@ export default class extends Command {
                 }
                 if (delta)
                     yield user.save();
-                yield ((_p = this.msg) === null || _p === void 0 ? void 0 : _p.reply({
+                yield ((_m = this.msg) === null || _m === void 0 ? void 0 : _m.reply({
                     content: `\`\`\`Reminder(s) unblocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
                     allowedMentions: { repliedUser: false }
                 }));

@@ -1,7 +1,8 @@
 import { Command } from "breezer.js";
 import { MessageEmbed } from "discord.js";
 import { client } from "../index.js";
-import helpText from "../helpers/helpText.js";
+import { helpText } from "../helpers/text.js";
+import { getAd } from "../helpers/funcs.js";
 
 export default class extends Command {
     constructor() {
@@ -18,7 +19,7 @@ export default class extends Command {
             },
             description: helpText,
             footer: {
-                text: 'Help msg under development 🔨'
+                text: `Help msg under development 🔨 (${await getAd()})`
             }
         });
 

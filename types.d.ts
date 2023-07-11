@@ -23,3 +23,11 @@ export type Tasks = 'mission'|'report'|'tower'|'train'|'adventure'|'daily'|'vote
 export type TimeoutStore = {
     [index: string]: NodeJS.Timeout
 }
+
+export type ProUser = {
+    userId: string,
+    username: string
+    mission: number,
+    report: number,
+    challenge: number
+}

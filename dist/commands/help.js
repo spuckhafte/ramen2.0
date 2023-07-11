@@ -10,7 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Command } from "breezer.js";
 import { MessageEmbed } from "discord.js";
 import { client } from "../index.js";
-import helpText from "../helpers/helpText.js";
+import { helpText } from "../helpers/text.js";
+import { getAd } from "../helpers/funcs.js";
 export default class extends Command {
     constructor() {
         super({
@@ -27,7 +28,7 @@ export default class extends Command {
                 },
                 description: helpText,
                 footer: {
-                    text: 'Help msg under development 🔨'
+                    text: `Help msg under development 🔨 (${yield getAd()})`
                 }
             });
             yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.channel.send({ embeds: [embed] }));

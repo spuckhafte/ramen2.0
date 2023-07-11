@@ -19,7 +19,7 @@ export const client = bot.bot;
 
 const nPrefix = 'n';
 
-bot.bot.on('messageCreate', async msg => {
+client.on('messageCreate', async msg => {
     if (!msg.guild) return;
 
     if (Bio.ADMIN.TESTING) {
@@ -44,12 +44,12 @@ bot.bot.on('messageCreate', async msg => {
 });
 
 // @ts-ignore
-bot.bot.on('messageReactionAdd', async(rxn, user) => await balHandler(rxn, user));
+client.on('messageReactionAdd', async(rxn, user) => await balHandler(rxn, user));
 
 bot.go(async () => {
-    console.log(`Logged in as ${bot.bot.user?.username}`);
+    console.log(`Logged in as ${client.user?.username}`);
 });
-bot.bot.on('ready', async () => {
+client.on('ready', async () => {
     await reRegisterReminders();
     console.log('Reminders Re-registered!');
 })

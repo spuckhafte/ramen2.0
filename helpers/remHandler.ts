@@ -36,7 +36,14 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
 
     const timeout = setTimeout(async () => {
         delete timeouts[`${id}-${task}`]
-        await channel?.send(`<@${id}> your **${task}** is ready!`);
+        try {
+            await channel?.send(`<@${id}> your **${task}** is ready!`);
+        } catch (e) {
+            console.error(`
+                PAYLOAD: <@${id}> your ${task} is ready!
+                ERROR: ${e}
+            `);
+        }
     }, ((remIntervals[task] * 1000) - tickedTime) - delay);
     
     timeouts[`${id}-${task}`] = timeout;

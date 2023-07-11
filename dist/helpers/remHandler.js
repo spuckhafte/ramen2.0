@@ -43,7 +43,15 @@ export function manageReminders(task, id, actualTS, channel) {
         yield updateDb({ id }, `lastPlayed.${task}`, channel.id);
         const timeout = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
             delete timeouts[`${id}-${task}`];
-            yield (channel === null || channel === void 0 ? void 0 : channel.send(`<@${id}> your **${task}** is ready!`));
+            try {
+                yield (channel === null || channel === void 0 ? void 0 : channel.send(`<@${id}> your **${task}** is ready!`));
+            }
+            catch (e) {
+                console.error(`
+                PAYLOAD: <@${id}> your ${task} is ready!
+                ERROR: ${e}
+            `);
+            }
         }), ((remIntervals[task] * 1000) - tickedTime) - delay);
         timeouts[`${id}-${task}`] = timeout;
         return 'added';

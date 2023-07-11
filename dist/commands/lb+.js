@@ -8,58 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Command, StateManager, buttonSignal } from "breezer.js";
-import { getAd, getTask } from "../helpers/funcs.js";
-import User from "../schema/User.js";
+import { getAd, getTask, isPro } from "../helpers/funcs.js";
 import { MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
-import { client } from "../index.js";
 const meme = 'https://www.youtube.com/watch?v=td1QQphKDK4';
 const stateManager = new StateManager({});
 export default class extends Command {
     constructor() {
         super({
-            structure: ['string', 'string'],
+            structure: ['string'],
             states: stateManager.clone()
         });
     }
     execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         return __awaiter(this, void 0, void 0, function* () {
-            const [type, scope] = this.extract();
+            const [type] = this.extract();
+            const premServer = yield isPro(this.msg);
+            if (!premServer)
+                return;
+            const allPremUsers = premServer.users;
             if (!this.botHasPerm('SEND_MESSAGES') || !this.botHasPerm('EMBED_LINKS')) {
                 if (this.botHasPerm('SEND_MESSAGES'))
                     (_a = this.msg) === null || _a === void 0 ? void 0 : _a.channel.send("`Missing Perm: [EMBED_LINKS]`");
                 return;
             }
-            if (!type || !scope) {
-                yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.channel.send(`\`r lb <task> <scope>\``));
-                return;
-            }
-            if (type != 'm' && type != 'r' && type != 'ch') {
-                yield ((_c = this.msg) === null || _c === void 0 ? void 0 : _c.channel.send(`\`r lb <task> <scope>\`\n\`\`\`<task> "m": missions, "r": reports, "ch": challenges\`\`\``));
+            if (!type || (type != 'm' && type != 'r' && type != 'ch')) {
+                yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.channel.send(`\`r lb <task> \`\n\`\`\`<task> "m": missions, "r": reports, "ch": challenges\`\`\``));
                 return;
             }
             ;
-            if (scope != 'l' && scope != 'g') {
-                yield ((_d = this.msg) === null || _d === void 0 ? void 0 : _d.channel.send(`\`r lb <task> <scope>\`\n\`\`\`<scope> "l": local, "g": global\`\`\``));
-                return;
-            }
             const task = getTask(type);
-            const pageDetails = yield getPage(1, scope, task, this.msg);
+            const pageDetails = yield getPage(allPremUsers, 1, task, this.msg);
             if (!pageDetails)
                 return;
             const total = pageDetails.data.length;
             const lastPage = Math.ceil(total / 10);
-            (_e = this.states) === null || _e === void 0 ? void 0 : _e.set('pageNo', _ => 1);
-            (_f = this.states) === null || _f === void 0 ? void 0 : _f.set('page', _ => pageDetails.string);
+            (_c = this.states) === null || _c === void 0 ? void 0 : _c.set('pageNo', _ => 1);
+            (_d = this.states) === null || _d === void 0 ? void 0 : _d.set('page', _ => pageDetails.string);
             const embed = new MessageEmbed({
-                title: `${scope == 'l' ? "LOCAL" : 'GLOBAL'} ${task.toUpperCase()} LB`,
+                title: `${(_f = (_e = this.msg) === null || _e === void 0 ? void 0 : _e.guild) === null || _f === void 0 ? void 0 : _f.name}'s ${task.toUpperCase()} LB`,
                 description: '$page$',
                 footer: {
                     text: `$pageNo$ of ${lastPage} (${yield getAd()})`,
                     iconURL: (_g = this.msg) === null || _g === void 0 ? void 0 : _g.author.displayAvatarURL()
                 },
                 thumbnail: {
-                    url: (_h = client.user) === null || _h === void 0 ? void 0 : _h.displayAvatarURL()
+                    url: (_k = (_j = (_h = this.msg) === null || _h === void 0 ? void 0 : _h.guild) === null || _j === void 0 ? void 0 : _j.iconURL()) !== null && _k !== void 0 ? _k : ""
                 }
             });
             const row = new MessageActionRow()
@@ -78,16 +72,18 @@ export default class extends Command {
                 .addComponents(new MessageButton()
                 .setCustomId('ff')
                 .setStyle('SECONDARY')
-                .setEmoji('⏩'))
-                .addComponents(new MessageButton()
-                .setCustomId('yourPage')
-                .setStyle('PRIMARY')
-                .setLabel('Your Page'));
+                .setEmoji('⏩'));
+            if (pageDetails.data.find(usr => { var _a; return usr.userId === ((_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.id); })) {
+                row.addComponents(new MessageButton()
+                    .setCustomId('yourPage')
+                    .setStyle('PRIMARY')
+                    .setLabel('Your Page'));
+            }
             const sent = yield this.send({ embeds: [embed], components: [row] });
-            (_l = buttonSignal([(_k = (_j = this.msg) === null || _j === void 0 ? void 0 : _j.author.id) !== null && _k !== void 0 ? _k : ""], sent, { time: 15 * 60 * 1000 })) === null || _l === void 0 ? void 0 : _l.on('collect', (btn) => __awaiter(this, void 0, void 0, function* () {
-                var _m, _o, _p;
+            (_o = buttonSignal([(_m = (_l = this.msg) === null || _l === void 0 ? void 0 : _l.author.id) !== null && _m !== void 0 ? _m : ""], sent, { time: 15 * 60 * 1000 })) === null || _o === void 0 ? void 0 : _o.on('collect', (btn) => __awaiter(this, void 0, void 0, function* () {
+                var _p, _q, _r;
                 yield btn.deferUpdate();
-                let page = (_m = this.states) === null || _m === void 0 ? void 0 : _m.get('pageNo');
+                let page = (_p = this.states) === null || _p === void 0 ? void 0 : _p.get('pageNo');
                 if (!page)
                     return;
                 if (btn.customId == 'forward' && page == lastPage ||
@@ -102,30 +98,23 @@ export default class extends Command {
                 if (btn.customId == 'ff')
                     page = lastPage;
                 if (btn.customId == 'yourPage') {
-                    const userIndex = pageDetails.data.findIndex(val => { var _a; return val.id == ((_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.id); });
+                    const userIndex = pageDetails.data.findIndex(val => { var _a; return val.userId == ((_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.id); });
                     page = Math.ceil((userIndex + 1) / 10);
                 }
-                const newPage = yield getPage(page, scope, task, this.msg);
+                const newPage = yield getPage(allPremUsers, page, task, this.msg);
                 if (!newPage)
                     return;
-                (_o = this.states) === null || _o === void 0 ? void 0 : _o.set('page', () => newPage.string);
-                (_p = this.states) === null || _p === void 0 ? void 0 : _p.set('pageNo', () => page);
+                (_q = this.states) === null || _q === void 0 ? void 0 : _q.set('page', () => newPage.string);
+                (_r = this.states) === null || _r === void 0 ? void 0 : _r.set('pageNo', () => page);
             }));
         });
     }
 }
-function getPage(pageNo, scope, task, msg) {
+function getPage(allPremUsers, pageNo, task, msg) {
     return __awaiter(this, void 0, void 0, function* () {
-        const sortQuery = { [`weekly.${task}`]: -1 };
-        let data = yield User.find({}, ['id', 'username', `weekly.${task}`]).sort(sortQuery);
-        if (scope == 'l') {
-            if (!msg || !msg.guild)
-                return;
-            const allGuildMembers = (yield msg.guild.members.fetch()).map(i => i.id);
-            data = data.filter(i => allGuildMembers.includes(i.id));
-        }
+        allPremUsers = arrangeUsers(allPremUsers, task);
         const from = (pageNo - 1) * 10;
-        const page = data.slice(from, from + 10);
+        const page = allPremUsers.slice(from, from + 10);
         let string = '';
         for (let i = 0; i < page.length; i++) {
             const entry = page[i];
@@ -134,8 +123,27 @@ function getPage(pageNo, scope, task, msg) {
                 username = `__${entry.username}__`;
             else
                 username = entry.username;
-            string += `\`#${((pageNo - 1) * 10) + i + 1}\` **${username}** - **[${entry.weekly[task]}](${meme})**\\n`;
+            string += `\`#${((pageNo - 1) * 10) + i + 1}\` **${username}** - **[${entry[task]}](${meme})**\\n`;
         }
-        return { data, string };
+        return { data: allPremUsers, string };
     });
 }
+function arrangeUsers(arr, task) {
+    if (arr.length <= 1)
+        return arr;
+    let pivot = arr[0];
+    let leftArr = [];
+    let rightArr = [];
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i][task] > pivot[task])
+            leftArr.push(arr[i]);
+        else
+            rightArr.push(arr[i]);
+    }
+    return [
+        ...arrangeUsers(leftArr, task),
+        pivot,
+        ...arrangeUsers(rightArr, task)
+    ];
+}
+;

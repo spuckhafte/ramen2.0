@@ -2,6 +2,8 @@ import { Command } from "breezer.js";
 import User from "../schema/User.js";
 import { MessageEmbed } from "discord.js";
 import { StdObject } from "../types.js";
+import { client } from "../index.js";
+import { getAd } from "../helpers/funcs.js";
 
 export default class extends Command {
     constructor() {
@@ -46,7 +48,11 @@ export default class extends Command {
                     value: `**➼ Missions:** \`#${await getRanking(user.id, 'mission')}\`\n**➼ Reports:** \`#${await getRanking(user.id, 'report')}\`\n**➼ Challenges:** \`#${await getRanking(user.id, 'challenge')}\``
                 },
             ],
-            color: 'RANDOM'
+            color: 'RANDOM',
+            footer: {
+                iconURL: client.user?.displayAvatarURL(),
+                text: await getAd()
+            }
         });
         await this.msg?.channel.send({ embeds: [embed] });
     }

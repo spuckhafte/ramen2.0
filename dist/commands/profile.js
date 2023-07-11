@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Command } from "breezer.js";
 import User from "../schema/User.js";
 import { MessageEmbed } from "discord.js";
+import { client } from "../index.js";
+import { getAd } from "../helpers/funcs.js";
 export default class extends Command {
     constructor() {
         super({
@@ -17,7 +19,7 @@ export default class extends Command {
         });
     }
     execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.botHasPerm('SEND_MESSAGES'))
                 return;
@@ -53,9 +55,13 @@ export default class extends Command {
                         value: `**➼ Missions:** \`#${yield getRanking(user.id, 'mission')}\`\n**➼ Reports:** \`#${yield getRanking(user.id, 'report')}\`\n**➼ Challenges:** \`#${yield getRanking(user.id, 'challenge')}\``
                     },
                 ],
-                color: 'RANDOM'
+                color: 'RANDOM',
+                footer: {
+                    iconURL: (_o = client.user) === null || _o === void 0 ? void 0 : _o.displayAvatarURL(),
+                    text: yield getAd()
+                }
             });
-            yield ((_o = this.msg) === null || _o === void 0 ? void 0 : _o.channel.send({ embeds: [embed] }));
+            yield ((_p = this.msg) === null || _p === void 0 ? void 0 : _p.channel.send({ embeds: [embed] }));
         });
     }
 }

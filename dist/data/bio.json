@@ -7,5 +7,8 @@
     },
     "NB": "770100332998295572",
     "DEFAULT_CHANNEL": "1017481136471023646",
-    "DB": "mongodb+srv://spuckhafte:gf4EI8vrEXpX1Nvk@noodles.i9yhhky.mongodb.net/ramen?retryWrites=true&w=majority"
+    "DB": "mongodb+srv://spuckhafte:gf4EI8vrEXpX1Nvk@noodles.i9yhhky.mongodb.net/ramen?retryWrites=true&w=majority",
+    "PAYPAL": "https://paypal.me/spuckhafte",
+    "UPI": "rakshit240405@oksbi",
+    "OFFICIAL_SERVER": "https://discord.gg/eEeaExspU8"
 }
