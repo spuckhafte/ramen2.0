@@ -1,6 +1,6 @@
 import { Command } from "breezer.js";
 import User from "../schema/User.js";
-import { MessageEmbed } from "discord.js";
+import { AnyChannel, MessageEmbed } from "discord.js";
 import { StdObject } from "../types.js";
 import { client } from "../index.js";
 import { getAd } from "../helpers/funcs.js";
@@ -28,7 +28,10 @@ export default class extends Command {
             return;
         }
 
-        let defaultChannel = await client.channels.fetch(user.extras?.defaultChannel ?? "");
+        let defaultChannel: AnyChannel | null = null;
+        try {
+            defaultChannel = await client.channels.fetch(user.extras?.defaultChannel ?? "12345");
+        } catch (_) { null };
 
         const embed = new MessageEmbed({
             title: `👤 ${user.username}`,

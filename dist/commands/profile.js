@@ -35,7 +35,14 @@ export default class extends Command {
                 yield ((_e = this.msg) === null || _e === void 0 ? void 0 : _e.channel.send('**Profile not found :(**'));
                 return;
             }
-            let defaultChannel = yield client.channels.fetch((_g = (_f = user.extras) === null || _f === void 0 ? void 0 : _f.defaultChannel) !== null && _g !== void 0 ? _g : "");
+            let defaultChannel = null;
+            try {
+                defaultChannel = yield client.channels.fetch((_g = (_f = user.extras) === null || _f === void 0 ? void 0 : _f.defaultChannel) !== null && _g !== void 0 ? _g : "12345");
+            }
+            catch (_) {
+                null;
+            }
+            ;
             const embed = new MessageEmbed({
                 title: `👤 ${user.username}`,
                 thumbnail: { url: profileOf.displayAvatarURL() },
