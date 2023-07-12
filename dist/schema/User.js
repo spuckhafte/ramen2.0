@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         online: {
             type: Boolean,
             default: false
+        },
+        early: {
+            type: Number,
+            default: 0,
         }
     },
     weekly: {

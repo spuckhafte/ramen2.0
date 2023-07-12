@@ -30,8 +30,9 @@ client.on('messageCreate', (msg) => __awaiter(void 0, void 0, void 0, function* 
         return;
     if (Bio.ADMIN.TESTING) {
         if (!Bio.ADMIN.DEV_SERVERS.includes(msg.guild.id) &&
-            !Bio.ADMIN.DEV_CHANNELS.includes(msg.channel.id))
+            !Bio.ADMIN.DEV_CHANNELS.includes(msg.channel.id)) {
             return;
+        }
     }
     if (msg.content.toLowerCase().replace(/[ ]+/g, ' ').split(' ')[0].trim() == nPrefix) {
         if (msg.author.bot)

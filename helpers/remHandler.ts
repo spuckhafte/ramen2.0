@@ -6,7 +6,6 @@ import { client } from "../index.js";
 import Bio from '../data/bio.json' assert { type: "json" };
 
 export const timeouts:TimeoutStore = {} // { "4539454395349-mission": 2342, "userid-task": timeoutId }
-const delay = 1500;
 
 export async function manageReminders(task:Tasks, id:string, actualTS:'now'|number, channel:TextChannel|null) {
     if (timeouts[`${id}-${task}`] != undefined) return;
@@ -17,6 +16,7 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     if (!user) return;
     if (user.blockPings.includes(task)) return;
 
+    const delay = user.extras?.early ?? 0;
     actualTS = (actualTS == 'now' ? Date.now() : actualTS) as number;
 
     if (Date.now() >= (actualTS + remIntervals[task] * 1000)) return;
@@ -44,7 +44,7 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
                 ERROR: ${e}
             `);
         }
-    }, ((remIntervals[task] * 1000) - tickedTime) - delay);
+    }, ((remIntervals[task] * 1000) - tickedTime) - (delay * 1000) - 1000);
     
     timeouts[`${id}-${task}`] = timeout;
 

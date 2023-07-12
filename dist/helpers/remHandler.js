@@ -12,9 +12,8 @@ import { register, remIntervals, updateDb } from "./funcs.js";
 import { client } from "../index.js";
 import Bio from '../data/bio.json' assert { type: "json" };
 export const timeouts = {};
-const delay = 1500;
 export function manageReminders(task, id, actualTS, channel) {
-    var _a, _b;
+    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         if (timeouts[`${id}-${task}`] != undefined)
             return;
@@ -27,18 +26,19 @@ export function manageReminders(task, id, actualTS, channel) {
             return;
         if (user.blockPings.includes(task))
             return;
+        const delay = (_b = (_a = user.extras) === null || _a === void 0 ? void 0 : _a.early) !== null && _b !== void 0 ? _b : 0;
         actualTS = (actualTS == 'now' ? Date.now() : actualTS);
         if (Date.now() >= (actualTS + remIntervals[task] * 1000))
             return;
         const tickedTime = Date.now() - actualTS;
         yield updateDb({ id }, `reminder.${task}`, actualTS);
-        if ((_a = user.extras) === null || _a === void 0 ? void 0 : _a.defaultChannel)
+        if ((_c = user.extras) === null || _c === void 0 ? void 0 : _c.defaultChannel)
             channel = (yield client.channels.fetch(user.extras.defaultChannel));
         if (!channel)
             channel = (yield client.channels.fetch(Bio.DEFAULT_CHANNEL));
         if (!channel)
             return;
-        if (!((_b = channel.guild.members.me) === null || _b === void 0 ? void 0 : _b.permissionsIn(channel).has('SEND_MESSAGES')))
+        if (!((_d = channel.guild.members.me) === null || _d === void 0 ? void 0 : _d.permissionsIn(channel).has('SEND_MESSAGES')))
             return;
         yield updateDb({ id }, `lastPlayed.${task}`, channel.id);
         const timeout = setTimeout(() => __awaiter(this, void 0, void 0, function* () {
@@ -52,7 +52,7 @@ export function manageReminders(task, id, actualTS, channel) {
                 ERROR: ${e}
             `);
             }
-        }), ((remIntervals[task] * 1000) - tickedTime) - delay);
+        }), ((remIntervals[task] * 1000) - tickedTime) - (delay * 1000) - 1000);
         timeouts[`${id}-${task}`] = timeout;
         return 'added';
     });

@@ -2,7 +2,7 @@
 
 import { Command } from "breezer.js";
 import { MessageEmbed } from "discord.js";
-import { plusHelp, plusText } from "../helpers/text.js";
+import { plusText } from "../helpers/text.js";
 import { client } from "../index.js";
 import Config from "../schema/Config.js";
 import { getAd, isPro } from "../helpers/funcs.js";
@@ -51,20 +51,6 @@ export default class extends Command {
                 },
                 color: "AQUA"
             });
-            await this.msg?.channel.send({ embeds: [embed] });
-        }
-
-        if (query == 'cmd') {
-            const embed = new MessageEmbed({
-                title: "💫 Ramen Plus Commands",
-                description: plusHelp,
-                footer: {
-                    iconURL: client.user?.displayAvatarURL(),
-                    text: "use \"r plus\""
-                },
-                color: "PURPLE"
-            });
-
             await this.msg?.channel.send({ embeds: [embed] });
         }
 

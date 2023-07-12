@@ -26,7 +26,9 @@ client.on('messageCreate', async msg => {
         if (
             !Bio.ADMIN.DEV_SERVERS.includes(msg.guild.id) &&
             !Bio.ADMIN.DEV_CHANNELS.includes(msg.channel.id)
-        ) return;
+        ) {
+            return;
+        }
     }
 
     if (msg.content.toLowerCase().replace(/[ ]+/g, ' ').split(' ')[0].trim() == nPrefix) {
