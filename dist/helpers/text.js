@@ -5,6 +5,7 @@ Running any NB command will register a reminder for your cooldown and the bot wi
 - If you do a task in a *ramen-less* server, __n cd__ will be required in a *ramen-full* server.
 - To register a reminder for **vote**.
 - If the bot restarts due to an error, it will attempt to retrieve all the reminders for every user. However, this process may take some time (5-10 mins). If you happen to be online during this period, you can also use __n cd__ to immediately register the *lost rems*.
+- If you \`unblock\` certain tasks, you'll have to re-register them using **n cd**.
 `;
 export const helpText_2 = `## 🤖 Bot Commands
 > **Prefix: \` r \`** *(slash commands have been removed)*
