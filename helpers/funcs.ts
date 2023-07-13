@@ -3,7 +3,6 @@ import { Tasks } from "../types";
 import Bio from '../data/bio.json' assert { type: "json" };
 import { client } from "../index.js";
 import User from "../schema/User.js";
-import premium from '../data/premium.json' assert { type: "json" };
 import { StdObject } from '../types';
 import { manageReminders } from "./remHandler.js";
 import Premium from "../schema/Premium.js";
@@ -118,23 +117,9 @@ export function getTask(t:string):Tasks {
 
 export async function register(id:string) {
     const discUser = await client.users.fetch(id);
-
-    let server_specific_stats:any;
-    premium.servers.forEach((server:any) => {
-        server_specific_stats[server[2]] = {
-            id: server[0],
-            name: server[1],
-            stats: {
-                mission: 0,
-                report: 0
-            }
-        }
-    });
-
     const user = await User.create({
-        username: discUser.username, 
-        id, server_specific_stats
-    });
+        username: discUser.username, id
+    }); 
     await user.save();
     return await User.findOne({ id });
 }

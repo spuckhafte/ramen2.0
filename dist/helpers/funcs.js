@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import Bio from '../data/bio.json' assert { type: "json" };
 import { client } from "../index.js";
 import User from "../schema/User.js";
-import premium from '../data/premium.json' assert { type: "json" };
 import { manageReminders } from "./remHandler.js";
 import Premium from "../schema/Premium.js";
 import Config from "../schema/Config.js";
@@ -118,20 +117,8 @@ export function getTask(t) {
 export function register(id) {
     return __awaiter(this, void 0, void 0, function* () {
         const discUser = yield client.users.fetch(id);
-        let server_specific_stats;
-        premium.servers.forEach((server) => {
-            server_specific_stats[server[2]] = {
-                id: server[0],
-                name: server[1],
-                stats: {
-                    mission: 0,
-                    report: 0
-                }
-            };
-        });
         const user = yield User.create({
-            username: discUser.username,
-            id, server_specific_stats
+            username: discUser.username, id
         });
         yield user.save();
         return yield User.findOne({ id });

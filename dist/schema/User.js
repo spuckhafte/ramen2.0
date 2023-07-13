@@ -39,32 +39,6 @@ const userSchema = new mongoose.Schema({
         report: DNumber,
         challenge: DNumber
     },
-    server_specific_stats: {
-        server1: {
-            id: String,
-            name: String,
-            stats: {
-                mission: DNumber,
-                report: DNumber
-            }
-        },
-        server2: {
-            id: String,
-            name: String,
-            stats: {
-                mission: DNumber,
-                report: DNumber
-            }
-        },
-        server3: {
-            id: String,
-            name: String,
-            stats: {
-                mission: DNumber,
-                report: DNumber
-            }
-        }
-    },
     blockPings: {
         type: [String],
         default: []
