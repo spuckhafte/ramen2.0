@@ -19,7 +19,7 @@ export default class extends Command {
         });
     }
     execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.botHasPerm('SEND_MESSAGES'))
                 return;
@@ -35,27 +35,19 @@ export default class extends Command {
                 yield ((_e = this.msg) === null || _e === void 0 ? void 0 : _e.channel.send('**Profile not found :(**'));
                 return;
             }
-            let defaultChannel = null;
-            try {
-                defaultChannel = yield client.channels.fetch((_g = (_f = user.extras) === null || _f === void 0 ? void 0 : _f.defaultChannel) !== null && _g !== void 0 ? _g : "12345");
-            }
-            catch (_) {
-                null;
-            }
-            ;
             const embed = new MessageEmbed({
                 title: `👤 ${user.username}`,
                 thumbnail: { url: profileOf.displayAvatarURL() },
-                description: `**Status:** ${((_h = user.extras) === null || _h === void 0 ? void 0 : _h.online) ? '🟢' : '🔴'}\n**Default Channel:** ${defaultChannel ? `<#${defaultChannel.id}>` : '❌'}`,
+                description: `**Status:** ${((_f = user.extras) === null || _f === void 0 ? void 0 : _f.online) ? '🟢' : '🔴'}\n**Default Channel:** ${((_g = user.extras) === null || _g === void 0 ? void 0 : _g.defaultChannel) ? `<#${user.extras.defaultChannel}>` : '❌'}`,
                 fields: [
                     {
                         name: '👴 LIFETIME STATS',
-                        value: `**➼ Missions:** ${(_j = user.stats) === null || _j === void 0 ? void 0 : _j.mission}\n**➼ Reports:** ${(_k = user.stats) === null || _k === void 0 ? void 0 : _k.report}\n**➼ Challenges:** ${(_l = user.stats) === null || _l === void 0 ? void 0 : _l.challenge}`,
+                        value: `**➼ Missions:** ${(_h = user.stats) === null || _h === void 0 ? void 0 : _h.mission}\n**➼ Reports:** ${(_j = user.stats) === null || _j === void 0 ? void 0 : _j.report}\n**➼ Challenges:** ${(_k = user.stats) === null || _k === void 0 ? void 0 : _k.challenge}`,
                         inline: true
                     },
                     {
                         name: '📅 WEEKLY STATS',
-                        value: `**➼ Missions:** ${(_m = user.weekly) === null || _m === void 0 ? void 0 : _m.mission}\n**➼ Reports:** ${(_o = user.weekly) === null || _o === void 0 ? void 0 : _o.report}\n**➼ Challenges:** ${(_p = user.weekly) === null || _p === void 0 ? void 0 : _p.challenge}`,
+                        value: `**➼ Missions:** ${(_l = user.weekly) === null || _l === void 0 ? void 0 : _l.mission}\n**➼ Reports:** ${(_m = user.weekly) === null || _m === void 0 ? void 0 : _m.report}\n**➼ Challenges:** ${(_o = user.weekly) === null || _o === void 0 ? void 0 : _o.challenge}`,
                         inline: true
                     },
                     {
@@ -65,11 +57,11 @@ export default class extends Command {
                 ],
                 color: 'RANDOM',
                 footer: {
-                    iconURL: (_q = client.user) === null || _q === void 0 ? void 0 : _q.displayAvatarURL(),
+                    iconURL: (_p = client.user) === null || _p === void 0 ? void 0 : _p.displayAvatarURL(),
                     text: yield getAd()
                 }
             });
-            yield ((_r = this.msg) === null || _r === void 0 ? void 0 : _r.channel.send({ embeds: [embed] }));
+            yield ((_q = this.msg) === null || _q === void 0 ? void 0 : _q.channel.send({ embeds: [embed] }));
         });
     }
 }

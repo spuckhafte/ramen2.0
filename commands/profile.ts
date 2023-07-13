@@ -28,15 +28,11 @@ export default class extends Command {
             return;
         }
 
-        let defaultChannel: AnyChannel | null = null;
-        try {
-            defaultChannel = await client.channels.fetch(user.extras?.defaultChannel ?? "12345");
-        } catch (_) { null };
 
         const embed = new MessageEmbed({
             title: `👤 ${user.username}`,
             thumbnail: { url: profileOf.displayAvatarURL() },
-            description: `**Status:** ${user.extras?.online ? '🟢' : '🔴'}\n**Default Channel:** ${defaultChannel ? `<#${defaultChannel.id}>` : '❌'}`,
+            description: `**Status:** ${user.extras?.online ? '🟢' : '🔴'}\n**Default Channel:** ${user.extras?.defaultChannel ? `<#${user.extras.defaultChannel}>` : '❌'}`,
             fields: [
                 {
                     name: '👴 LIFETIME STATS',
