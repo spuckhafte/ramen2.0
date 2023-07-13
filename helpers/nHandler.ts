@@ -82,6 +82,11 @@ export default async (msg: Message) => {
             const desc = nbMsg.embeds[0].description as string;
             let timeString = desc.split('- `')[1].trim().split('` rema')[0].trim();
             const ticked = timeTicked('quest', timeToMs(timeString));
+
+            if (Number.isNaN(ticked)) {
+                console.log(ticked, timeString ,'<- quest');
+                return;
+            }
             
             const confirm = await manageReminders(
                 'quest', msg.author.id, Date.now() - (ticked as number), 

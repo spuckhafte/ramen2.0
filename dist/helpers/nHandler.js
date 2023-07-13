@@ -63,6 +63,10 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
             const desc = nbMsg.embeds[0].description;
             let timeString = desc.split('- `')[1].trim().split('` rema')[0].trim();
             const ticked = timeTicked('quest', timeToMs(timeString));
+            if (Number.isNaN(ticked)) {
+                console.log(ticked, timeString, '<- quest');
+                return;
+            }
             const confirm = yield manageReminders('quest', msg.author.id, Date.now() - ticked, msg.channel);
             if (confirm == 'added') {
                 yield msg.channel.send({
