@@ -25,7 +25,9 @@ export async function manageReminders(task:Tasks, id:string, actualTS:'now'|numb
     await updateDb({ id }, `reminder.${task}`, actualTS);
 
     if (user.extras?.defaultChannel) 
-        channel = await client.channels.fetch(user.extras.defaultChannel) as TextChannel;
+        try {
+            channel = await client.channels.fetch(user.extras.defaultChannel) as TextChannel;
+        } catch(_) { console.log('error fetching channel') }
     if (!channel)
         channel = await client.channels.fetch(Bio.DEFAULT_CHANNEL) as TextChannel;
 

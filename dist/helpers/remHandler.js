@@ -33,7 +33,12 @@ export function manageReminders(task, id, actualTS, channel) {
         const tickedTime = Date.now() - actualTS;
         yield updateDb({ id }, `reminder.${task}`, actualTS);
         if ((_c = user.extras) === null || _c === void 0 ? void 0 : _c.defaultChannel)
-            channel = (yield client.channels.fetch(user.extras.defaultChannel));
+            try {
+                channel = (yield client.channels.fetch(user.extras.defaultChannel));
+            }
+            catch (_) {
+                console.log('error fetching channel');
+            }
         if (!channel)
             channel = (yield client.channels.fetch(Bio.DEFAULT_CHANNEL));
         if (!channel)
