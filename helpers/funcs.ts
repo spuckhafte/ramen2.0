@@ -161,7 +161,9 @@ export async function reRegisterReminders() {
                     channel = await client.channels.fetch(defaultChannel) as TextChannel;
                 } catch (e) {
                     if (user.extras?.defaultChannel) 
-                        channel =  await client.channels.fetch(user.extras.defaultChannel) as TextChannel;
+                        try {
+                            channel =  await client.channels.fetch(user.extras.defaultChannel) as TextChannel;
+                        } catch(_) { console.log('Error fetching channel (user.extras.defaultChannel)') }
                     else channel = nbPlay1;
                 }
                 prevChannel = channel;

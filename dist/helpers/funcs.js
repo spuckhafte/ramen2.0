@@ -167,7 +167,12 @@ export function reRegisterReminders() {
                     }
                     catch (e) {
                         if ((_e = user.extras) === null || _e === void 0 ? void 0 : _e.defaultChannel)
-                            channel = (yield client.channels.fetch(user.extras.defaultChannel));
+                            try {
+                                channel = (yield client.channels.fetch(user.extras.defaultChannel));
+                            }
+                            catch (_) {
+                                console.log('Error fetching channel (user.extras.defaultChannel)');
+                            }
                         else
                             channel = nbPlay1;
                     }
