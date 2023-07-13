@@ -24,6 +24,8 @@ export default class extends Command {
             const [action] = this.extract();
             const mention = (_a = this.msg) === null || _a === void 0 ? void 0 : _a.mentions.users.first();
             if ((action != 'add' && action != 'del' && action != 'show') || (action != 'show' && !mention)) {
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.reply({
                     content: "**Correct structure of this command: `r mod <add||del> @someone\`**",
                     allowedMentions: { repliedUser: false }
@@ -37,12 +39,16 @@ export default class extends Command {
                     mods.push((_e = user === null || user === void 0 ? void 0 : user.user.username) !== null && _e !== void 0 ? _e : "");
                 }
                 ;
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 (_f = this.msg) === null || _f === void 0 ? void 0 : _f.reply(`**Username(s) of the Mod(s)**\n\`\`\`${mods.join(", ")}\`\`\``);
                 return;
             }
             if (!mention)
                 return;
             if (!premServer.mods.includes((_h = (_g = this.msg) === null || _g === void 0 ? void 0 : _g.author.id) !== null && _h !== void 0 ? _h : "")) {
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 yield ((_j = this.msg) === null || _j === void 0 ? void 0 : _j.reply({
                     content: "**You are not allowed to access this command.**",
                     allowedMentions: { repliedUser: false }
@@ -51,6 +57,8 @@ export default class extends Command {
             }
             if (action == 'add') {
                 if (premServer.mods.includes(mention.id)) {
+                    if (!this.botHasPerm('SEND_MESSAGES'))
+                        return;
                     yield ((_k = this.msg) === null || _k === void 0 ? void 0 : _k.reply({
                         content: "**The mentioned user is already a *mod*.**",
                         allowedMentions: { repliedUser: false }
@@ -63,6 +71,8 @@ export default class extends Command {
             }
             if (action == 'del') {
                 if (!premServer.mods.includes(mention.id)) {
+                    if (!this.botHasPerm('SEND_MESSAGES'))
+                        return;
                     yield ((_m = this.msg) === null || _m === void 0 ? void 0 : _m.reply({
                         content: "**The mentioned user is not a *mod*.**",
                         allowedMentions: { repliedUser: false }
@@ -71,6 +81,8 @@ export default class extends Command {
                 }
                 premServer.mods.splice(premServer.mods.indexOf(mention.id), 1);
                 yield premServer.save();
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 yield ((_o = this.msg) === null || _o === void 0 ? void 0 : _o.reply(`**\`${mention.username}\` is __not__ a *mod* now!**`));
             }
         });

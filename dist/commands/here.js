@@ -21,14 +21,20 @@ export default class extends Command {
             const [action] = this.extract();
             if (!action) {
                 yield updateDb({ id: (_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.id }, 'extras.defaultChannel', (_b = this.msg) === null || _b === void 0 ? void 0 : _b.channel.id);
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 yield ((_c = this.msg) === null || _c === void 0 ? void 0 : _c.reply('**You will now recieve your pings in this channel.**'));
                 return;
             }
             if (action == 'clear' || action == 'clr') {
                 yield updateDb({ id: (_d = this.msg) === null || _d === void 0 ? void 0 : _d.author.id }, 'extras.defaultChannel', '');
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 yield ((_e = this.msg) === null || _e === void 0 ? void 0 : _e.reply('**Personal channel cleared!**'));
             }
             else {
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 yield ((_f = this.msg) === null || _f === void 0 ? void 0 : _f.reply({
                     content: "**`r here clear/clr`: clears your default channel.**",
                     allowedMentions: { repliedUser: false }

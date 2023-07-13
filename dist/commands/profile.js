@@ -21,6 +21,7 @@ export default class extends Command {
     execute() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(this.botHasPerm('SEND_MESSAGES'), this.botHasPerm('EMBED_LINKS'));
             if (!this.botHasPerm('SEND_MESSAGES'))
                 return;
             if (!this.botHasPerm('EMBED_LINKS')) {

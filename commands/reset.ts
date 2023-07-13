@@ -22,6 +22,7 @@ export default class extends Command {
                 }
             }
         });
+        if (!this.botHasPerm('SEND_MESSAGES')) return;
         this.msg?.reply("WEEKLY STATS RESET!")
     }
 }

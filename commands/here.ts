@@ -13,14 +13,17 @@ export default class extends Command {
         
         if (!action) {
             await updateDb({ id: this.msg?.author.id }, 'extras.defaultChannel', this.msg?.channel.id);
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             await this.msg?.reply('**You will now recieve your pings in this channel.**');
             return;
         }
 
         if (action == 'clear' || action == 'clr') {
             await updateDb({ id: this.msg?.author.id }, 'extras.defaultChannel', '');
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             await this.msg?.reply('**Personal channel cleared!**');
         } else {
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             await this.msg?.reply({
                 content: "**`r here clear/clr`: clears your default channel.**",
                 allowedMentions: { repliedUser: false }

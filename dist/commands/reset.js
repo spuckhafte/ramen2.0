@@ -32,6 +32,8 @@ export default class extends Command {
                     }
                 }
             });
+            if (!this.botHasPerm('SEND_MESSAGES'))
+                return;
             (_a = this.msg) === null || _a === void 0 ? void 0 : _a.reply("WEEKLY STATS RESET!");
         });
     }

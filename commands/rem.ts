@@ -36,6 +36,12 @@ export default class extends Command {
                 }
             });
 
+            if (!this.botHasPerm('SEND_MESSAGES') || !this.botHasPerm('EMBED_LINKS')) {
+                if (this.botHasPerm('SEND_MESSAGES'))
+                    this.msg?.channel.send("`Missing Perm: [EMBED_LINKS]`");
+                return;
+            }
+
             await this.msg?.reply({
                 embeds: [embed],
                 allowedMentions: { repliedUser: false }
@@ -63,6 +69,12 @@ export default class extends Command {
                     }
                 });
 
+                if (!this.botHasPerm('SEND_MESSAGES') || !this.botHasPerm('EMBED_LINKS')) {
+                    if (this.botHasPerm('SEND_MESSAGES'))
+                        this.msg?.channel.send("`Missing Perm: [EMBED_LINKS]`");
+                    return;
+                }
+
                 this.msg?.reply({ 
                     embeds: [embed],
                     allowedMentions: { repliedUser: false }
@@ -76,6 +88,7 @@ export default class extends Command {
             if (query == 'all') user.blockPings = [...allTasks];
             else {
                 if (task == 'null') {
+                    if (!this.botHasPerm('SEND_MESSAGES')) return;
                     this.msg?.reply({ 
                         content: `**\`${query}\` is not a valid task!**`, 
                         allowedMentions: { repliedUser: false }
@@ -91,11 +104,12 @@ export default class extends Command {
             if (delta) await user.save();
 
 
-
-            await this.msg?.reply({
-                content: `\`\`\`Reminder(s) blocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
-                allowedMentions: { repliedUser: false }
-            });
+            if (this.botHasPerm('SEND_MESSAGES')) {
+                await this.msg?.reply({
+                    content: `\`\`\`Reminder(s) blocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
+                    allowedMentions: { repliedUser: false }
+                });
+            }
 
             const timeoutKeys = Object.keys(timeouts);
             const timeoutValues = Object.values(timeouts);
@@ -126,6 +140,7 @@ export default class extends Command {
             else {
                 const task = getTask(query);
                 if (!task) {
+                    if (!this.botHasPerm('SEND_MESSAGES')) return;
                     this.msg?.reply({ 
                         content: `**\`${query}\` is not a valid task!**`, 
                         allowedMentions: { repliedUser: false }
@@ -139,6 +154,7 @@ export default class extends Command {
             }
 
             if (delta) await user.save();
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             await this.msg?.reply({
                 content: `\`\`\`Reminder(s) unblocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
                 allowedMentions: { repliedUser: false }

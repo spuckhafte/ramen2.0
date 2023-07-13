@@ -22,6 +22,8 @@ export default class extends Command {
             if (!premServer)
                 return;
             if (!premServer.mods.includes((_b = (_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.id) !== null && _b !== void 0 ? _b : "")) {
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 yield ((_c = this.msg) === null || _c === void 0 ? void 0 : _c.reply({
                     content: "**You are not allowed to access this command.**",
                     allowedMentions: { repliedUser: false }
@@ -31,6 +33,8 @@ export default class extends Command {
             let [task] = this.extract();
             task = getTask(task);
             if (task == 'null' || (task !== 'mission' && task !== 'report' && task !== 'challenge')) {
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
                 (_d = this.msg) === null || _d === void 0 ? void 0 : _d.reply({
                     content: '`r lbclr <task>`\n`<task> "m" | "r" | "ch"`',
                     allowedMentions: { repliedUser: false }
@@ -40,6 +44,8 @@ export default class extends Command {
             for (let usr of premServer.users)
                 usr[task] = 0;
             yield premServer.save();
+            if (!this.botHasPerm('SEND_MESSAGES'))
+                return;
             yield ((_e = this.msg) === null || _e === void 0 ? void 0 : _e.reply("**Mission LB cleared!**"));
         });
     }

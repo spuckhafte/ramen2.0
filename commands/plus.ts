@@ -17,6 +17,12 @@ export default class extends Command {
     async execute() {
         const [query] = this.extract();
 
+        if (!this.botHasPerm('SEND_MESSAGES') || !this.botHasPerm('EMBED_LINKS')) {
+            if (this.botHasPerm('SEND_MESSAGES'))
+                this.msg?.channel.send("`Missing Perm: [EMBED_LINKS]`");
+            return;
+        }
+
         if (!query) {
             const embed = new MessageEmbed({
                 title: "✨ RAMEN PLUS",

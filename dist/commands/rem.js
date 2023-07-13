@@ -23,7 +23,7 @@ export default class extends Command {
         });
     }
     execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         return __awaiter(this, void 0, void 0, function* () {
             const [action, query] = this.extract();
             if (action == 'show') {
@@ -40,12 +40,17 @@ export default class extends Command {
                         iconURL: (_a = this.msg) === null || _a === void 0 ? void 0 : _a.author.displayAvatarURL()
                     }
                 });
-                yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.reply({
+                if (!this.botHasPerm('SEND_MESSAGES') || !this.botHasPerm('EMBED_LINKS')) {
+                    if (this.botHasPerm('SEND_MESSAGES'))
+                        (_b = this.msg) === null || _b === void 0 ? void 0 : _b.channel.send("`Missing Perm: [EMBED_LINKS]`");
+                    return;
+                }
+                yield ((_c = this.msg) === null || _c === void 0 ? void 0 : _c.reply({
                     embeds: [embed],
                     allowedMentions: { repliedUser: false }
                 }));
             }
-            const user = yield User.findOne({ id: (_c = this.msg) === null || _c === void 0 ? void 0 : _c.author.id });
+            const user = yield User.findOne({ id: (_d = this.msg) === null || _d === void 0 ? void 0 : _d.author.id });
             if (!user)
                 return;
             if (action == 'block') {
@@ -61,10 +66,15 @@ export default class extends Command {
                         color: "DARK_RED",
                         footer: {
                             text: `${totalBlocked} of ${allTasks.length} tasks are blocked (${yield getAd()})`,
-                            iconURL: (_d = this.msg) === null || _d === void 0 ? void 0 : _d.author.displayAvatarURL()
+                            iconURL: (_e = this.msg) === null || _e === void 0 ? void 0 : _e.author.displayAvatarURL()
                         }
                     });
-                    (_e = this.msg) === null || _e === void 0 ? void 0 : _e.reply({
+                    if (!this.botHasPerm('SEND_MESSAGES') || !this.botHasPerm('EMBED_LINKS')) {
+                        if (this.botHasPerm('SEND_MESSAGES'))
+                            (_f = this.msg) === null || _f === void 0 ? void 0 : _f.channel.send("`Missing Perm: [EMBED_LINKS]`");
+                        return;
+                    }
+                    (_g = this.msg) === null || _g === void 0 ? void 0 : _g.reply({
                         embeds: [embed],
                         allowedMentions: { repliedUser: false }
                     });
@@ -76,7 +86,9 @@ export default class extends Command {
                     user.blockPings = [...allTasks];
                 else {
                     if (task == 'null') {
-                        (_f = this.msg) === null || _f === void 0 ? void 0 : _f.reply({
+                        if (!this.botHasPerm('SEND_MESSAGES'))
+                            return;
+                        (_h = this.msg) === null || _h === void 0 ? void 0 : _h.reply({
                             content: `**\`${query}\` is not a valid task!**`,
                             allowedMentions: { repliedUser: false }
                         });
@@ -89,15 +101,17 @@ export default class extends Command {
                 }
                 if (delta)
                     yield user.save();
-                yield ((_g = this.msg) === null || _g === void 0 ? void 0 : _g.reply({
-                    content: `\`\`\`Reminder(s) blocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
-                    allowedMentions: { repliedUser: false }
-                }));
+                if (this.botHasPerm('SEND_MESSAGES')) {
+                    yield ((_j = this.msg) === null || _j === void 0 ? void 0 : _j.reply({
+                        content: `\`\`\`Reminder(s) blocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
+                        allowedMentions: { repliedUser: false }
+                    }));
+                }
                 const timeoutKeys = Object.keys(timeouts);
                 const timeoutValues = Object.values(timeouts);
                 if (query == 'all') {
                     for (let i in timeoutKeys) {
-                        if (!timeoutKeys[i].includes((_j = (_h = this.msg) === null || _h === void 0 ? void 0 : _h.author.id) !== null && _j !== void 0 ? _j : ""))
+                        if (!timeoutKeys[i].includes((_l = (_k = this.msg) === null || _k === void 0 ? void 0 : _k.author.id) !== null && _l !== void 0 ? _l : ""))
                             continue;
                         clearTimeout(timeoutValues[i]);
                         delete timeouts[timeoutKeys[i]];
@@ -105,7 +119,7 @@ export default class extends Command {
                 }
                 else {
                     for (let i in timeoutKeys) {
-                        if (timeoutKeys[i].trim() != `${(_k = this.msg) === null || _k === void 0 ? void 0 : _k.author.id}-${task}`)
+                        if (timeoutKeys[i].trim() != `${(_m = this.msg) === null || _m === void 0 ? void 0 : _m.author.id}-${task}`)
                             continue;
                         clearTimeout(timeoutValues[i]);
                         delete timeouts[timeoutKeys[i]];
@@ -122,7 +136,9 @@ export default class extends Command {
                 else {
                     const task = getTask(query);
                     if (!task) {
-                        (_l = this.msg) === null || _l === void 0 ? void 0 : _l.reply({
+                        if (!this.botHasPerm('SEND_MESSAGES'))
+                            return;
+                        (_o = this.msg) === null || _o === void 0 ? void 0 : _o.reply({
                             content: `**\`${query}\` is not a valid task!**`,
                             allowedMentions: { repliedUser: false }
                         });
@@ -135,7 +151,9 @@ export default class extends Command {
                 }
                 if (delta)
                     yield user.save();
-                yield ((_m = this.msg) === null || _m === void 0 ? void 0 : _m.reply({
+                if (!this.botHasPerm('SEND_MESSAGES'))
+                    return;
+                yield ((_p = this.msg) === null || _p === void 0 ? void 0 : _p.reply({
                     content: `\`\`\`Reminder(s) unblocked: ${query == 'all' ? query.toUpperCase() : getTask(query).toUpperCase()}\`\`\``,
                     allowedMentions: { repliedUser: false }
                 }));

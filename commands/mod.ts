@@ -16,6 +16,7 @@ export default class extends Command {
         const mention = this.msg?.mentions.users.first();
 
         if ((action != 'add' && action != 'del' && action != 'show') || (action != 'show' && !mention)) {
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             await this.msg?.reply({
                 content: "**Correct structure of this command: `r mod <add||del> @someone\`**",
                 allowedMentions: { repliedUser: false }
@@ -29,6 +30,7 @@ export default class extends Command {
                 const user = await this.msg?.guild?.members.fetch(mod);
                 mods.push(user?.user.username ?? "");
             };
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             this.msg?.reply(`**Username(s) of the Mod(s)**\n\`\`\`${mods.join(", ")}\`\`\``);
             return;
         }
@@ -36,6 +38,7 @@ export default class extends Command {
         if (!mention) return;
         
         if (!premServer.mods.includes(this.msg?.author.id ?? "")) {
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             await this.msg?.reply({
                 content: "**You are not allowed to access this command.**",
                 allowedMentions: { repliedUser: false }
@@ -45,6 +48,7 @@ export default class extends Command {
 
         if (action == 'add') {
             if (premServer.mods.includes(mention.id)) {
+                if (!this.botHasPerm('SEND_MESSAGES')) return;
                 await this.msg?.reply({
                     content: "**The mentioned user is already a *mod*.**",
                     allowedMentions: { repliedUser: false }
@@ -60,6 +64,7 @@ export default class extends Command {
 
         if (action == 'del') {
             if (!premServer.mods.includes(mention.id)) {
+                if (!this.botHasPerm('SEND_MESSAGES')) return;
                 await this.msg?.reply({
                     content: "**The mentioned user is not a *mod*.**",
                     allowedMentions: { repliedUser: false }
@@ -70,6 +75,7 @@ export default class extends Command {
             premServer.mods.splice(premServer.mods.indexOf(mention.id), 1);
             await premServer.save();
 
+            if (!this.botHasPerm('SEND_MESSAGES')) return;
             await this.msg?.reply(`**\`${mention.username}\` is __not__ a *mod* now!**`);
         }
     }

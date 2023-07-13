@@ -20,9 +20,14 @@ export default class extends Command {
         });
     }
     execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         return __awaiter(this, void 0, void 0, function* () {
             const [query] = this.extract();
+            if (!this.botHasPerm('SEND_MESSAGES') || !this.botHasPerm('EMBED_LINKS')) {
+                if (this.botHasPerm('SEND_MESSAGES'))
+                    (_a = this.msg) === null || _a === void 0 ? void 0 : _a.channel.send("`Missing Perm: [EMBED_LINKS]`");
+                return;
+            }
             if (!query) {
                 const embed = new MessageEmbed({
                     title: "✨ RAMEN PLUS",
@@ -32,7 +37,7 @@ export default class extends Command {
                     },
                     color: "GOLD"
                 });
-                yield ((_a = this.msg) === null || _a === void 0 ? void 0 : _a.reply({
+                yield ((_b = this.msg) === null || _b === void 0 ? void 0 : _b.reply({
                     embeds: [embed],
                     allowedMentions: { repliedUser: false }
                 }));
@@ -42,19 +47,19 @@ export default class extends Command {
                 const premServer = yield isPro(this.msg);
                 if (!premServer)
                     return;
-                const from = epochToDate((_b = premServer.from) !== null && _b !== void 0 ? _b : 0);
-                const till = epochToDate((_c = premServer.till) !== null && _c !== void 0 ? _c : 0);
-                const daysLeft = Math.round((((_d = premServer.till) !== null && _d !== void 0 ? _d : 0) - ((_e = premServer.from) !== null && _e !== void 0 ? _e : 0)) / (1000 * 60 * 60 * 24));
+                const from = epochToDate((_c = premServer.from) !== null && _c !== void 0 ? _c : 0);
+                const till = epochToDate((_d = premServer.till) !== null && _d !== void 0 ? _d : 0);
+                const daysLeft = Math.round((((_e = premServer.till) !== null && _e !== void 0 ? _e : 0) - ((_f = premServer.from) !== null && _f !== void 0 ? _f : 0)) / (1000 * 60 * 60 * 24));
                 const embed = new MessageEmbed({
                     title: "💯 Plus Subscription Validity",
                     description: `**Form:** ${from}\n**Till:** ${till}\n**Days Left:** ${daysLeft}`,
                     footer: {
-                        iconURL: (_f = client.user) === null || _f === void 0 ? void 0 : _f.displayAvatarURL(),
+                        iconURL: (_g = client.user) === null || _g === void 0 ? void 0 : _g.displayAvatarURL(),
                         text: yield getAd()
                     },
                     color: "AQUA"
                 });
-                yield ((_g = this.msg) === null || _g === void 0 ? void 0 : _g.channel.send({ embeds: [embed] }));
+                yield ((_h = this.msg) === null || _h === void 0 ? void 0 : _h.channel.send({ embeds: [embed] }));
             }
             if (query == "subs") {
                 const config = yield Config.findOne({ discriminator: "only-config" });
@@ -63,7 +68,7 @@ export default class extends Command {
                 const fields = [];
                 for (let usr of config.subs) {
                     fields.push({
-                        name: (_h = usr.username) !== null && _h !== void 0 ? _h : "",
+                        name: (_j = usr.username) !== null && _j !== void 0 ? _j : "",
                         value: `Amount: \`${usr.amount}\``,
                         inline: true
                     });
@@ -72,14 +77,14 @@ export default class extends Command {
                     title: "✨ Plus Supporters",
                     description: !fields.length ? "> **No one yet :(**" : `> **Total supporter(s): \`${fields.length}\`**`,
                     footer: {
-                        iconURL: (_j = client.user) === null || _j === void 0 ? void 0 : _j.displayAvatarURL(),
+                        iconURL: (_k = client.user) === null || _k === void 0 ? void 0 : _k.displayAvatarURL(),
                         text: "use \"r plus\""
                     },
                     color: "FUCHSIA"
                 });
                 if (fields.length > 0)
                     embed.fields = fields;
-                yield ((_k = this.msg) === null || _k === void 0 ? void 0 : _k.channel.send({ embeds: [embed] }));
+                yield ((_l = this.msg) === null || _l === void 0 ? void 0 : _l.channel.send({ embeds: [embed] }));
             }
         });
     }
