@@ -52,6 +52,7 @@ bot.go(async () => {
     console.log(`Logged in as ${client.user?.username}`);
 });
 client.on('ready', async () => {
+    client.user?.setActivity({ name: "r help", type: "LISTENING" })
     await reRegisterReminders();
     console.log('Reminders Re-registered!');
 })

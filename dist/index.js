@@ -52,6 +52,8 @@ bot.go(() => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Logged in as ${(_e = client.user) === null || _e === void 0 ? void 0 : _e.username}`);
 }));
 client.on('ready', () => __awaiter(void 0, void 0, void 0, function* () {
+    var _f;
+    (_f = client.user) === null || _f === void 0 ? void 0 : _f.setActivity({ name: "r help", type: "LISTENING" });
     yield reRegisterReminders();
     console.log('Reminders Re-registered!');
 }));
