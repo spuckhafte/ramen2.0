@@ -14,8 +14,12 @@ import mongoose from 'mongoose';
 import reportHelp from './helpers/reportHelp.js';
 import { reRegisterReminders } from './helpers/funcs.js';
 import balHandler from './helpers/balHandler.js';
+import { redi } from './helpers/redisHandler.js';
 mongoose.set('strictQuery', false);
 mongoose.connect(Bio.DB, (e) => console.log(e ? "Error: " + e : "[connected to DB]"));
+redi.connect()
+    .then(() => console.log('[connected to reddis'))
+    .catch(e => console.log('[error on redis connection]: ', e));
 const bot = new Bot({
     commandsFolder: './dist/commands',
     token: Bio.BOT_TOKEN,

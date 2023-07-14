@@ -12,6 +12,8 @@ import User from "../schema/User.js";
 import { MessageEmbed } from "discord.js";
 import { client } from "../index.js";
 import { getAd } from "../helpers/funcs.js";
+import { redi } from "../helpers/redisHandler.js";
+import Bio from '../data/bio.json' assert { type: "json" };
 export default class extends Command {
     constructor() {
         super({
@@ -21,7 +23,6 @@ export default class extends Command {
     execute() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(this.botHasPerm('SEND_MESSAGES'), this.botHasPerm('EMBED_LINKS'));
             if (!this.botHasPerm('SEND_MESSAGES'))
                 return;
             if (!this.botHasPerm('EMBED_LINKS')) {
@@ -68,8 +69,16 @@ export default class extends Command {
 }
 function getRanking(userId, task) {
     return __awaiter(this, void 0, void 0, function* () {
-        const sortQuery = { [`weekly.${task}`]: -1 };
-        let data = yield User.find({}, ['id', 'username', `weekly.${task}`]).sort(sortQuery);
-        return data.findIndex(usr => usr.id === userId) + 1;
+        const key = `${userId}-lbrank-${task}`;
+        let ranking = yield redi.get(key);
+        if (!ranking) {
+            const sortQuery = { [`weekly.${task}`]: -1 };
+            let data = yield User.find({}, ['id', 'username', `weekly.${task}`]).sort(sortQuery);
+            const rank = data.findIndex(usr => usr.id === userId) + 1;
+            yield redi.setEx(key, Bio.REDIS.USER_LB_RANK_EXP_MIN * 60, `${rank}`);
+            return rank;
+        }
+        else
+            return +ranking;
     });
 }

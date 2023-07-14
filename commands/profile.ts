@@ -1,9 +1,11 @@
 import { Command } from "breezer.js";
 import User from "../schema/User.js";
-import { AnyChannel, MessageEmbed } from "discord.js";
+import { MessageEmbed } from "discord.js";
 import { StdObject } from "../types.js";
 import { client } from "../index.js";
 import { getAd } from "../helpers/funcs.js";
+import { redi } from "../helpers/redisHandler.js";
+import Bio from '../data/bio.json' assert { type: "json" };
 
 export default class extends Command {
     constructor() {
@@ -13,7 +15,6 @@ export default class extends Command {
     }
 
     async execute() {
-        console.log(this.botHasPerm('SEND_MESSAGES'), this.botHasPerm('EMBED_LINKS'))
         if (!this.botHasPerm('SEND_MESSAGES')) return;
         if (!this.botHasPerm('EMBED_LINKS')) {
             await this.msg?.channel.send(`Missing Perm: [EMBED_LINKS]`);
@@ -61,7 +62,16 @@ export default class extends Command {
 }
 
 async function getRanking(userId:string, task:'mission'|'challenge'|'report') {
-    const sortQuery:StdObject = { [`weekly.${task}`]: -1 };
-    let data = await User.find({}, ['id', 'username', `weekly.${task}`]).sort(sortQuery);
-    return data.findIndex(usr => usr.id === userId) + 1;
+    const key = `${userId}-lbrank-${task}`;
+    let ranking = await redi.get(key);
+
+    if (!ranking) {
+        const sortQuery:StdObject = { [`weekly.${task}`]: -1 };
+        let data = await User.find({}, ['id', 'username', `weekly.${task}`]).sort(sortQuery);
+
+        const rank = data.findIndex(usr => usr.id === userId) + 1;
+        await redi.setEx(key, Bio.REDIS.USER_LB_RANK_EXP_MIN * 60, `${rank}`);
+        return rank;        
+    } else
+        return +ranking;
 }
