@@ -15,7 +15,7 @@
 
     "REDIS": {
         "CONNECT": {
-            "url": "rediss://default:rNSVirxUBQEeH7EK49W47W4iY4uLvfdz@redis-12396.c212.ap-south-1-1.ec2.cloud.redislabs.com:12396"
+            "url": "redis://default:rNSVirxUBQEeH7EK49W47W4iY4uLvfdz@redis-12396.c212.ap-south-1-1.ec2.cloud.redislabs.com:12396"
         },
         "USER_LB_RANK_EXP_MIN": 15 
     }
