@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Command } from "breezer.js";
 import User from "../schema/User.js";
-import Bio from '../data/bio.json' assert { type: "json" };
 export default class extends Command {
     constructor() {
         super({
@@ -17,11 +16,13 @@ export default class extends Command {
         });
     }
     execute() {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.msg)
                 return;
-            if (!Bio.GOD_MODS.includes(this.msg.author.id))
+            if (!((_a = this.msg.member) === null || _a === void 0 ? void 0 : _a.roles.cache.has('1130759159151874139')))
+                return;
+            if (this.msg.channel.id != '1130765930771779625')
                 return;
             yield User.updateMany({}, {
                 $set: {
@@ -34,7 +35,7 @@ export default class extends Command {
             });
             if (!this.botHasPerm('SEND_MESSAGES'))
                 return;
-            (_a = this.msg) === null || _a === void 0 ? void 0 : _a.reply("WEEKLY STATS RESET!");
+            (_b = this.msg) === null || _b === void 0 ? void 0 : _b.reply("WEEKLY STATS RESET!");
         });
     }
 }
