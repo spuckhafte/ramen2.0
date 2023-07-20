@@ -10,7 +10,7 @@ const configSchema = new mongoose.Schema({
         amount: String
     }],
     try: String,
-    statusReset: String
+    "status-reset": String
 });
 
 const Config = mongoose.model("config", configSchema);

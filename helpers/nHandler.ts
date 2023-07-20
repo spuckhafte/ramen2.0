@@ -9,7 +9,7 @@ import Config from "../schema/Config.js";
 const clearUserOnlineStack: { [index: string]: NodeJS.Timer } = {};
 
 export default async (msg: Message) => {
-    const RESET_ONLINE = (await Config.findOne({ discriminator: "only-config" }))?.statusReset;
+    const RESET_ONLINE = (await Config.findOne({ discriminator: "only-config" }))?.['status-reset'];
     if (!RESET_ONLINE) return;
 
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();

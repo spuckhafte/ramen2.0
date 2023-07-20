@@ -15,7 +15,7 @@ import Config from "../schema/Config.js";
 const clearUserOnlineStack = {};
 export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const RESET_ONLINE = (_a = (yield Config.findOne({ discriminator: "only-config" }))) === null || _a === void 0 ? void 0 : _a.statusReset;
+    const RESET_ONLINE = (_a = (yield Config.findOne({ discriminator: "only-config" }))) === null || _a === void 0 ? void 0 : _a['status-reset'];
     if (!RESET_ONLINE)
         return;
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
