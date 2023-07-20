@@ -1,6 +1,6 @@
 import { Command } from "breezer.js";
 import Config from "../schema/Config.js";
-import Bio from '../data/bio.json';
+import Bio from '../data/bio.json' assert { type: "json" };
 
 export default class extends Command {
     constructor() {

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Command } from "breezer.js";
 import Config from "../schema/Config.js";
-import Bio from '../data/bio.json';
+import Bio from '../data/bio.json' assert { type: "json" };
 export default class extends Command {
     constructor() {
         super({
