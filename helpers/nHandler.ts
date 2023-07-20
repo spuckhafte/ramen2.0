@@ -4,11 +4,14 @@ import { manageReminders } from "./remHandler.js";
 import { Tasks } from "../types.js";
 import { remIntervals } from "./funcs.js";
 import User from "../schema/User.js";
+import Config from "../schema/Config.js";
 
-const RESET_ONLINE = 60; // seconds
 const clearUserOnlineStack: { [index: string]: NodeJS.Timer } = {};
 
 export default async (msg: Message) => {
+    const RESET_ONLINE = (await Config.findOne({ discriminator: "only-config" }))?.statusReset;
+    if (!RESET_ONLINE) return;
+
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
 
     const cmd = content.split(' ')[1];
@@ -25,7 +28,7 @@ export default async (msg: Message) => {
         clearUserOnlineStack[msg.author.id] = setInterval(async () => {
             await updateDb({ id: msg.author.id }, 'extras.online', false);
             delete clearUserOnlineStack[msg.author.id];
-        }, RESET_ONLINE * 1000);
+        }, +RESET_ONLINE * 1000);
     });
 
     if (task == 'mission' || task == 'report') {

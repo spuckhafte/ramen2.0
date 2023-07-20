@@ -8,7 +8,8 @@ const configSchema = new mongoose.Schema({
             username: String,
             amount: String
         }],
-    try: String
+    try: String,
+    statusReset: String
 });
 const Config = mongoose.model("config", configSchema);
 export default Config;

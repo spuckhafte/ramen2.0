@@ -11,9 +11,13 @@ import { collectSignal, getTask, premiumStat, statsManager, timeToMs, updateDb }
 import { manageReminders } from "./remHandler.js";
 import { remIntervals } from "./funcs.js";
 import User from "../schema/User.js";
-const RESET_ONLINE = 60;
+import Config from "../schema/Config.js";
 const clearUserOnlineStack = {};
 export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const RESET_ONLINE = (_a = (yield Config.findOne({ discriminator: "only-config" }))) === null || _a === void 0 ? void 0 : _a.statusReset;
+    if (!RESET_ONLINE)
+        return;
     const content = msg.content.toLowerCase().replace(/[ ]+/g, ' ').trim();
     const cmd = content.split(' ')[1];
     if (!cmd)
@@ -30,7 +34,7 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
         clearUserOnlineStack[msg.author.id] = setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
             yield updateDb({ id: msg.author.id }, 'extras.online', false);
             delete clearUserOnlineStack[msg.author.id];
-        }), RESET_ONLINE * 1000);
+        }), +RESET_ONLINE * 1000);
     }));
     if (task == 'mission' || task == 'report') {
         collectSignal(msg, 'em.title', m => { var _a, _b; return !!((_b = (_a = m.embeds[0]) === null || _a === void 0 ? void 0 : _a.title) === null || _b === void 0 ? void 0 : _b.includes(msg.author.username)); }).on('collect', (botMsg) => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,12 +82,12 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (task == 'challenge') {
         let collector = collectSignal(msg, 'msg.content', m => !!m.content.includes(`**${msg.author.username}** challenged you to a fight`)).on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
-            var _a;
-            const mention = (_a = msg.mentions.users.first()) !== null && _a !== void 0 ? _a : { id: "", username: "" };
+            var _b;
+            const mention = (_b = msg.mentions.users.first()) !== null && _b !== void 0 ? _b : { id: "", username: "" };
             let target = mention.id;
             collectSignal(msg, 'msg.content', m => !!(m.content.trim().toLowerCase() == 'y' || m.content.trim().toLowerCase() == 'yes'), 31, 1, target)
                 .on('collect', () => __awaiter(void 0, void 0, void 0, function* () {
-                var _b;
+                var _c;
                 yield manageReminders('challenge', msg.author.id, 'now', msg.channel);
                 collector.dispose(msg);
                 const user = yield User.findOne({ id: msg.author.id });
@@ -92,7 +96,7 @@ export default (msg) => __awaiter(void 0, void 0, void 0, function* () {
                 user.stats[task] += 1;
                 user.weekly[task] += 1;
                 yield user.save();
-                yield premiumStat((_b = msg.guild) === null || _b === void 0 ? void 0 : _b.id, user.id, msg.author.username, task);
+                yield premiumStat((_c = msg.guild) === null || _c === void 0 ? void 0 : _c.id, user.id, msg.author.username, task);
             }));
         }));
     }
