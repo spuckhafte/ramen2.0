@@ -19,12 +19,12 @@ export default class extends Command {
             return;
         }
 
-        if (Number.isNaN(timing)) {
+        timing = +timing;
+
+        if (isNaN(timing)) {
             this.msg?.reply("**Early Reminder Factor has to be a number (time in seconds)**");
             return;
         }
-
-        timing = +timing;
         
         if (timing > 5 || timing < 0) {
             this.msg?.reply("**Early Reminder Factor timing has to be in between \`0 to 5 seconds\`** *inclusive*.");

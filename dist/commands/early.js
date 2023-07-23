@@ -26,11 +26,11 @@ export default class extends Command {
                 (_b = this.msg) === null || _b === void 0 ? void 0 : _b.reply(`**Early Reminder Factor: \`${(_c = user.extras) === null || _c === void 0 ? void 0 : _c.early} seconds\`**`);
                 return;
             }
-            if (Number.isNaN(timing)) {
+            timing = +timing;
+            if (isNaN(timing)) {
                 (_d = this.msg) === null || _d === void 0 ? void 0 : _d.reply("**Early Reminder Factor has to be a number (time in seconds)**");
                 return;
             }
-            timing = +timing;
             if (timing > 5 || timing < 0) {
                 (_e = this.msg) === null || _e === void 0 ? void 0 : _e.reply("**Early Reminder Factor timing has to be in between \`0 to 5 seconds\`** *inclusive*.");
                 return;
