@@ -18,7 +18,7 @@ export const remIntervals = {
     report: 10 * 60,
     tower: 6 * 60 * 60,
     train: 1 * 60 * 60,
-    daily: 24 * 60 * 60,
+    daily: 20 * 60 * 60,
     challenge: 30 * 60,
     vote: 12 * 60 * 60,
     weekly: 7 * 24 * 60 * 60,
