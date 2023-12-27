@@ -13,7 +13,7 @@
     "OFFICIAL_SERVER": "https://discord.gg/eEeaExspU8",
     "REDIS": {
         "CONNECT": {
-            "url": "redis://default:rNSVirxUBQEeH7EK49W47W4iY4uLvfdz@redis-12396.c212.ap-south-1-1.ec2.cloud.redislabs.com:12396"
+            "url": "redis://default:nGfqoe3ywyxhLKSWlvmW4OIaHt2uZ12P@redis-16762.c301.ap-south-1-1.ec2.cloud.redislabs.com:16762"
         },
         "USER_LB_RANK_EXP_MIN": 15
     },
