@@ -1,22 +1,22 @@
 {
-    "BOT_TOKEN": "MTAxNjA0MzM4OTk5NDY2ODA3Mw.G_em9f.FhLC6e94p1D378g6_UIiEU0sSdx9Duw7vKZ9ls",
+    "BOT_TOKEN": "~",
     "ADMIN": {
-        "DEV_SERVERS": ["1056234987906662550"],
+        "DEV_SERVERS": ["~"],
         "DEV_CHANNELS": [""],
         "TESTING": false
     },
     "NB": "770100332998295572",
-    "DEFAULT_CHANNEL": "1017481136471023646",
-    "DB": "mongodb+srv://spuckhafte:gf4EI8vrEXpX1Nvk@noodles.i9yhhky.mongodb.net/ramen?retryWrites=true&w=majority",
-    "PAYPAL": "https://paypal.me/spuckhafte",
-    "UPI": "rakshit240405@oksbi",
+    "DEFAULT_CHANNEL": "~",
+    "DB": "mongodb+srv://<username>:<password>@<endpoint>",
+    "PAYPAL": "https://paypal.me/<username>",
+    "UPI": "<username>@<tag>",
     "OFFICIAL_SERVER": "https://discord.gg/eEeaExspU8",
 
     "REDIS": {
         "CONNECT": {
-            "url": "redis://default:nGfqoe3ywyxhLKSWlvmW4OIaHt2uZ12P@redis-16762.c301.ap-south-1-1.ec2.cloud.redislabs.com:16762"
+            "url": "redis://<username>:<password@<endpoint>"
         },
         "USER_LB_RANK_EXP_MIN": 15 
     },
-    "GOD_MODS": ["856184519442694154"]
+    "GOD_MODS": ["~"]
 }
